@@ -2,7 +2,7 @@ import Product from "./Product"
 
 const Products = () => {
     // Products div
-    return <div className="w-full grid grid-cols-5 justify-items-center mx-1 gap-y-2">
+    return <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] px-1 justify-items-center gap-y-2">
         <Product></Product>
         <Product></Product>
         <Product></Product>
@@ -14,6 +14,11 @@ const Products = () => {
         <Product></Product>
         <Product></Product>
         <Product></Product>
+        <Product></Product>
+        <Product></Product>
+        <Product></Product>
+        <Product></Product>
+
     </div>
 
 }
