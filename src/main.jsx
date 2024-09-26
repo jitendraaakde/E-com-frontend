@@ -8,6 +8,10 @@ import Signup from './components/majorCompo/Signup';
 import Login from './components/majorCompo/Login';
 import SingleProduct from './components/majorCompo/SingleProduct';
 import Cart from './components/majorCompo/Cart';
+import Profile from './components/majorCompo/Profile';
+import { Provider } from 'react-redux';
+import { store, persistor } from './store/index'; // Import both store and persistor
+import { PersistGate } from 'redux-persist/integration/react';
 
 const router = createBrowserRouter([
   {
@@ -26,13 +30,20 @@ const router = createBrowserRouter([
         path: '/product/:productId', element: <SingleProduct />
       }, {
         path: '/cart', element: <Cart />
+      }, {
+        path: '/profile', element: <Profile />
       }
     ]
   },
 ]);
 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   </StrictMode>
-)
+);
