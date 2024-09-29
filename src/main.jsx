@@ -13,6 +13,11 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './store/index'; // Import both store and persistor
 import { PersistGate } from 'redux-persist/integration/react';
 
+import EnhancedProductPage from './components/Example/OneProduct';
+import OrderHistory from './components/profileCompo/OrderHistory';
+import ProfilePage from './components/Example/Example2';
+import AdminDashboard from './components/AdminPortal/AdminDashboard';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -31,8 +36,22 @@ const router = createBrowserRouter([
       }, {
         path: '/cart', element: <Cart />
       }, {
-        path: '/profile', element: <Profile />
+        path: '/profile', element: <Profile />  
       }
+      , {
+        path: '/order-history', element: <OrderHistory />
+      }
+      , {
+        path: '/profile-page', element: <ProfilePage />
+      },{
+         path: '/EnhancedProductPage', element: <EnhancedProductPage />
+      },
+      ,{
+         path: '/admin-portal', element: <AdminDashboard />
+      },
+      ,{
+         path: '/test', element: <DoneExample />
+      },
     ]
   },
 ]);
