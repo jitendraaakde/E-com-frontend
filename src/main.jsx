@@ -8,15 +8,12 @@ import Signup from './components/majorCompo/Signup';
 import Login from './components/majorCompo/Login';
 import SingleProduct from './components/majorCompo/SingleProduct';
 import Cart from './components/majorCompo/Cart';
-import Profile from './components/majorCompo/Profile';
 import { Provider } from 'react-redux';
 import { store, persistor } from './store/index'; // Import both store and persistor
 import { PersistGate } from 'redux-persist/integration/react';
-
-import EnhancedProductPage from './components/Example/OneProduct';
-import OrderHistory from './components/profileCompo/OrderHistory';
-import ProfilePage from './components/Example/Example2';
 import AdminDashboard from './components/AdminPortal/AdminDashboard';
+import OrderHistory from './components/UserProfile/OrderHistory';
+import UserProfilePortal from './components/UserProfile/UserProfilePortal';
 
 const router = createBrowserRouter([
   {
@@ -32,26 +29,22 @@ const router = createBrowserRouter([
       {
         path: '/login', element: <Login />
       }, {
+        //confirm
         path: '/product/:productId', element: <SingleProduct />
       }, {
         path: '/cart', element: <Cart />
-      }, {
-        path: '/profile', element: <Profile />  
       }
       , {
         path: '/order-history', element: <OrderHistory />
       }
       , {
-        path: '/profile-page', element: <ProfilePage />
-      },{
-         path: '/EnhancedProductPage', element: <EnhancedProductPage />
-      },
-      ,{
-         path: '/admin-portal', element: <AdminDashboard />
-      },
-      ,{
-         path: '/test', element: <DoneExample />
-      },
+        //confirm
+        path: '/admin-portal', element: <AdminDashboard />
+      }
+      , {
+        //confirm
+        path: '/profile', element: <UserProfilePortal />
+      }
     ]
   },
 ]);

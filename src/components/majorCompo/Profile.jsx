@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
-import Addresses from "../profileCompo/Addresses";
+import Addresses from "../UserProfile/Addresses";
 import EditProfile from "../profileCompo/EditProfile";
-import OrderHistory from "../profileCompo/OrderHistory";
+import OrderHistory from "../UserProfile/OrderHistory";
 
 const Profile = () => {
     // State to handle form input values

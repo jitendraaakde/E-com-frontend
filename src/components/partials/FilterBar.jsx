@@ -1,16 +1,28 @@
-    import FilterItem from "./FilterItem"
+import { useState } from "react"
+import FilterItem from "./FilterItem"
 
-    const FilterBar = () => {
-        const filterArr = ['All Products', 'T-Shirt', 'Denim', 'SweatShirts', 'Polo T-Shirt', 'Shirt']
+const FilterBar = () => {
+    const [sort, setSort] = useState(false)
+    const filterArr = ['All Products', 'T-Shirt', 'Denim', 'SweatShirts', 'Polo T-Shirt', 'Shirt']
 
-        return <div className="flex justify-between m-3">
-            <div className="flex items-center">
-                <p className="text-xs">Filters:</p>
-                {filterArr.map(item => <FilterItem item={item} />)}
-            </div>
-            <div className="">
-                <button className="text-[9px] border-[1px] border-solid border-slate-700 px-3 p-[7px] ml-2 rounded-[20px] font-bold">Sort by:Price low to High</button>
-            </div>
+    return <div className="flex justify-between m-3">
+        <div className="flex items-center">
+            <p className="text-xs">Filters:</p>
+            {filterArr.map(item => <FilterItem item={item} />)}
         </div>
-    }
-    export default FilterBar
+        <div className="">
+            <button className="text-[9px] border-[1px] border-solid border-slate-700 px-3 p-[7px] ml-2 rounded-[20px] font-bold">Sort by:Price low to High</button>
+
+            <div className="text-[9px] border-[1px] border-solid border-slate-700 px-3 p-[7px] ml-2 rounded-[20px] font-bold">
+                <ul className="space-y-2">
+                    <li>Price Low to High </li>
+                    <li>New Arrivals</li>
+                    <li>Ratings </li>
+                    <li>Discount</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+}
+export default FilterBar

@@ -46,7 +46,7 @@ const Addresses = () => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full">
+        <div className="bg-white  space-y-3 w-full">
             <h2 className="text-2xl font-semibold mb-4">Addresses</h2>
 
             {/* Existing Addresses Section */}
@@ -66,7 +66,7 @@ const Addresses = () => {
             </div>
 
             {/* Add New Address Section */}
-            <div className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full">
+            <div className="bg-white  space-y-4 w-full">
                 {/* Street Field */}
                 <div>
                     <label className="block text-lg font-medium mb-2" htmlFor="street">Street</label>

@@ -1,7 +1,22 @@
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { app } from '../../store/firebase'
 const GAuth = () => {
     const handleGoogleClick = async () => {
         try {
+            const provider = new GoogleAuthProvider()
+            const auth = getAuth(app)
 
+            const result = await signInWithPopup(auth, provider)
+
+            const res = await fetch('/api/users/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: result.user.displayName, email: result.user.email, image: result.user.photoURL })
+            })
+            const backRes = await res.json()
+            console.log(backRes)
         } catch (error) {
             console.log('Could not signin with google', error)
         }
