@@ -34,6 +34,7 @@ export default function Navbar() {
                         <NavLink to="/order-history">Order History</NavLink>
                         <NavLink to="/admin-portal">Admin Portal</NavLink>
                         <NavLink to="/profile">Profile</NavLink>
+                        <NavLink to="/contact">contact</NavLink>
                     </div>
 
                     {/* Icons in desktop view */}

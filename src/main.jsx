@@ -14,6 +14,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import AdminDashboard from './components/AdminPortal/AdminDashboard';
 import OrderHistory from './components/UserProfile/OrderHistory';
 import UserProfilePortal from './components/UserProfile/UserProfilePortal';
+import ContactUs from './components/majorCompo/ContactUs';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       , {
         //confirm
         path: '/profile', element: <UserProfilePortal />
+      }
+      , {
+        //confirm
+        path: '/contact', element: <ContactUs />
       }
     ]
   },

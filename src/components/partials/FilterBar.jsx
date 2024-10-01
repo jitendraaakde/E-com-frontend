@@ -13,15 +13,6 @@ const FilterBar = () => {
         <div className="">
             <button className="text-[9px] border-[1px] border-solid border-slate-700 px-3 p-[7px] ml-2 rounded-[20px] font-bold">Sort by:Price low to High</button>
 
-            <div className="text-[9px] border-[1px] border-solid border-slate-700 px-3 p-[7px] ml-2 rounded-[20px] font-bold">
-                <ul className="space-y-2">
-                    <li>Price Low to High </li>
-                    <li>New Arrivals</li>
-                    <li>Ratings </li>
-                    <li>Discount</li>
-                </ul>
-            </div>
-
         </div>
     </div>
 }

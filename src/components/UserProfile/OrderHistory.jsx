@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import productIMg from "../../../public/product 2.png"
 
 const orders = [
     {
@@ -64,7 +65,7 @@ function OrderCard({ order }) {
                     <div className="mt-4 space-y-4">
                         {order.products.map((product) => (
                             <div key={product.id} className="flex items-center space-x-4">
-                                <img src={product.image} alt={product.name} className="h-20 w-20 object-cover" />
+                                <img src={productIMg} alt={product.name} className="h-20 w-20 object-cover" />
                                 <div className="flex-1">
                                     <h3 className="font-semibold">{product.name}</h3>
                                     <p className="text-sm text-gray-500">${product.price.toFixed(2)}</p>

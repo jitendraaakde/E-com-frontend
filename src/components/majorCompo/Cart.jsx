@@ -1,9 +1,39 @@
+import { useEffect } from 'react';
 import product_img from '../../../public/product_image.png';
 
 const Cart = () => {
+    const fetchCartItem = async () => {
+        try {
+            const res = await fetch('/api/users/cart', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include',  // This ensures cookies are sent with the request
+                body: JSON.stringify({
+                    userId: '123'
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchCartItem();
+    }, []);
+
+
     return (
         <div className="flex flex-wrap justify-between gap-6 px-6 py-8 max-w-screen-lg mx-auto">
-            {/* Cart Items Section */}
             <div className="flex-1 min-w-[45%] p-6 border border-gray-300 rounded-lg bg-white shadow-md">
                 <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
                 <div className="space-y-4">
