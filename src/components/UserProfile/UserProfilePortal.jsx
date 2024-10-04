@@ -3,6 +3,7 @@ import { FaLock, FaUser, FaBox, FaSignOutAlt, FaRegAddressCard } from 'react-ico
 import Addresses from './Addresses'
 import { IoLogOut } from "react-icons/io5";
 import OrderHistory from './OrderHistory';
+import { useSelector } from 'react-redux';
 
 
 export default function UserProfilePortal() {
@@ -57,8 +58,6 @@ export default function UserProfilePortal() {
                     </ul>
                 </nav>
             </aside>
-
-            {/* Main Content */}
             <main className="flex-1 p-6">
                 <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
                     {renderContent()}
@@ -69,78 +68,93 @@ export default function UserProfilePortal() {
 }
 
 function ProfileContent() {
+    const { user } = useSelector((store) => store.user);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formEntries = Object.fromEntries(formData.entries());
+        console.log('Form Entries Object:', formEntries);
+    };
+
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold">My Profile</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                        Full Name
-                    </label>
-                    <input
-                        type="text"
-                        id="fullName"
-                        name="fullName"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        placeholder="John Doe"
-                    />
+        <form onSubmit={handleSubmit}>
+            <div className="space-y-6">
+                <h2 className="text-2xl font-bold">My Profile</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            name="name"
+                            defaultValue={user?.name || ''}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            placeholder="John Doe"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            defaultValue={user?.email || ''}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            placeholder="john@example.com"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                            Phone
+                        </label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            defaultValue={user?.phone || ''}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            placeholder="+1 (555) 123-4567"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">
+                            Birthdate
+                        </label>
+                        <input
+                            type="date"
+                            id="birthdate"
+                            name="birthdate"
+                            defaultValue={user?.birthdate || ''}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                        />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                            Address
+                        </label>
+                        <textarea
+                            id="address"
+                            name="address"
+                            defaultValue={user?.address || ''}
+                            rows={3}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            placeholder="Enter your full address"
+                        ></textarea>
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        placeholder="john@example.com"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                        Phone
-                    </label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        placeholder="+1 (555) 123-4567"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">
-                        Birthdate
-                    </label>
-                    <input
-                        type="date"
-                        id="birthdate"
-                        name="birthdate"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    />
-                </div>
-                <div className="space-y-2 md:col-span-2">
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                        Address
-                    </label>
-                    <textarea
-                        id="address"
-                        name="address"
-                        rows={3}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        placeholder="Enter your full address"
-                    ></textarea>
-                </div>
+                <button
+                    type="submit"
+                    className="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                    Save Changes
+                </button>
             </div>
-            <button
-                type="submit"
-                className="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-                Save Changes
-            </button>
-        </div>
-    )
+        </form>
+    );
 }
 
 function ChangePasswordContent() {

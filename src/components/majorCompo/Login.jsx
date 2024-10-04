@@ -2,34 +2,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../store/userSlice";
 import { Link } from "react-router-dom";
 import GAuth from "../partials/GAuth";
+import { useState } from "react";
 
 const Login = () => {
     const dispatch = useDispatch();
-    const userObj = useSelector(store => store.user);
+    const [message, setMessage] = useState('')
 
     const handleLogin = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
-        console.log(formEntries)
+
         try {
-            const response = await fetch('/api/user/login', {
+            const response = await fetch('/api/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formEntries),
             });
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
+
             const data = await response.json();
-            dispatch(loginUser(data));
+
+            if (!response.ok) {
+                throw new Error(data.message || `Error: ${response.statusText}`);
+            }
+            setMessage(data.message)
+            dispatch(loginUser(data.user));
         } catch (error) {
             console.error('Login failed:', error.message);
         }
     };
-    console.log(userObj);
+
 
     return (
         <section className="bg-white">
@@ -41,7 +45,7 @@ const Login = () => {
                     <p className="mt-2 text-base text-gray-600">
                         Don't have an account? <Link to="/register" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Signup</Link>
                     </p>
-
+                    <p>{message}</p>
                     <form className="mt-8 space-y-5" onSubmit={handleLogin}>
                         <div className="space-y-2">
                             <label htmlFor="email" className="text-base font-medium text-gray-900">Email address</label>
@@ -53,7 +57,7 @@ const Login = () => {
                                 </div>
                                 <input
                                     type="email"
-                                    name="userEmail"
+                                    name="email"
                                     id="email"
                                     className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                     placeholder="Enter your email"
@@ -72,7 +76,7 @@ const Login = () => {
                                 </div>
                                 <input
                                     type="password"
-                                    name="userPassword"
+                                    name="password"
                                     id="password"
                                     className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                     placeholder="Enter your password"

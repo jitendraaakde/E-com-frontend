@@ -1,6 +1,8 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { app } from '../../store/firebase'
+import { useNavigate } from 'react-router-dom'
 const GAuth = () => {
+    const navigate = useNavigate()
     const handleGoogleClick = async () => {
         try {
             const provider = new GoogleAuthProvider()
@@ -8,15 +10,17 @@ const GAuth = () => {
 
             const result = await signInWithPopup(auth, provider)
 
-            const res = await fetch('/api/users/google', {
+            const response = await fetch('/api/users/google', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ name: result.user.displayName, email: result.user.email, image: result.user.photoURL })
             })
-            const backRes = await res.json()
-            console.log(backRes)
+            const data = await response.json()
+            if (data.success) {
+                navigate('/')
+            }
         } catch (error) {
             console.log('Could not signin with google', error)
         }

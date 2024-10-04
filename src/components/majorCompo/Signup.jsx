@@ -1,14 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GAuth from "../partials/GAuth";
+import { useState } from "react";
+
 
 const Profile = () => {
+    const navigate = useNavigate()
+    const [message, setMessage] = useState('Please Enter details')
     const handleSignup = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
-        console.log(formEntries)
         try {
-            const response = await fetch('/api/user/signup', {
+            const response = await fetch('/api/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -19,7 +22,10 @@ const Profile = () => {
                 throw new Error(`Error: ${response.statusText}`);
             }
             const data = await response.json();
-            // Handle success - possibly redirect or display success message
+            if (data.success) {
+                navigate('/login')
+            }
+
         } catch (error) {
             console.error('Signup failed:', error.message);
         }
@@ -35,7 +41,7 @@ const Profile = () => {
                     <p className="mt-2 text-base text-gray-600">
                         Already have an account? <Link to="/login" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</Link>
                     </p>
-
+                    <p>{message}</p>
                     <form className="mt-8" onSubmit={handleSignup}>
                         <div className="space-y-3">
                             {/* Name field */}
@@ -49,7 +55,7 @@ const Profile = () => {
                                     </div>
                                     <input
                                         type="text"
-                                        name="userName"
+                                        name="name"
                                         id="name"
                                         placeholder="Enter your full name"
                                         className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
@@ -68,7 +74,7 @@ const Profile = () => {
                                     </div>
                                     <input
                                         type="email"
-                                        name="userEmail"
+                                        name="email"
                                         id="email"
                                         placeholder="Enter email to get started"
                                         className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
@@ -87,7 +93,7 @@ const Profile = () => {
                                     </div>
                                     <input
                                         type="password"
-                                        name="userPassword"
+                                        name="passwordHash"
                                         id="password"
                                         placeholder="Enter your password"
                                         className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
