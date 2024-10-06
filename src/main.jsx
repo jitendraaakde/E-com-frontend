@@ -2,7 +2,6 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
-import Home from './components/majorCompo/Home';
 import Layout from './Layout';
 import Signup from './components/majorCompo/Signup';
 import Login from './components/majorCompo/Login';
@@ -15,6 +14,7 @@ import AdminDashboard from './components/AdminPortal/AdminDashboard';
 import OrderHistory from './components/UserProfile/OrderHistory';
 import UserProfilePortal from './components/UserProfile/UserProfilePortal';
 import ContactUs from './components/majorCompo/ContactUs';
+import HomePage from './components/Homepage/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <HomePage />,
       }, {
         path: '/register', element: <Signup />
       },

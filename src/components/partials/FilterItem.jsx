@@ -1,4 +1,7 @@
-const FilterItem = ({ item }) => {
-    return <button className="text-[9px] border-[1px] border-solid border-slate-700 px-3 p-[7px] ml-2 rounded-[20px]">{item}</button>
+export default function FilterItem({ item }) {
+  return (
+    <button className="text-xs sm:text-sm border border-slate-700 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors">
+      {item}
+    </button>
+  )
 }
-export default FilterItem
