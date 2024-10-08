@@ -14,7 +14,7 @@ import AdminDashboard from './components/AdminPortal/AdminDashboard';
 import OrderHistory from './components/UserProfile/OrderHistory';
 import UserProfilePortal from './components/UserProfile/UserProfilePortal';
 import ContactUs from './components/majorCompo/ContactUs';
-import HomePage from './components/Homepage/HomePage';
+import Home from './components/majorCompo/Home';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <HomePage />,
+        element: <Home />,
       }, {
         path: '/register', element: <Signup />
       },

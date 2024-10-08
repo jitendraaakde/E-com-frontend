@@ -1,11 +1,58 @@
+import { useEffect, useRef, useState } from 'react';
 import { FaPlus, FaRedoAlt } from 'react-icons/fa';
+import { getStorage, uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
+import { app } from '../../store/firebase';
 
 export default function AddProduct() {
-  const handleSubmit = (e) => {
+  const [files, setFiles] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [formData, setFormData] = useState({ imageUrls: [] });
+  const fileRef = useRef();
+  console.log('image', files)
+  console.log('formData', formData)
+
+  const handleImageSubmit = async () => {
+    if (files.length > 0 && files.length <= 4) {
+      console.log('storeimage', files)
+      const promises = files.map(file => storeImage(file));
+      try {
+        const urls = await Promise.all(promises);
+        setFormData({ ...formData, imageUrls: [...formData.imageUrls, ...urls] });
+      } catch (error) {
+        console.error('Error uploading images:', error);
+      }
+    }
+  };
+
+  const storeImage = (file) => {
+    console.log('store image', file)
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = `${new Date().getTime()}_${file.name}`;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        'state_changed', null,
+        (error) => reject(error),
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).
+            then((downloadUrl) => {
+              console.log('Tanishq', downloadUrl)
+              resolve(downloadUrl)
+            });
+        }
+      );
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const formEntries = Object.fromEntries(formData.entries());
-    formEntries.sizes = formData.getAll('sizes');
+    const formEntries = Object.fromEntries(new FormData(e.target).entries());
+    formEntries.sizes = new FormData(e.target).getAll('sizes');
+    await handleImageSubmit();
+    formEntries.imageUrls = formData.imageUrls;
+
     console.log('Submitting product:', formEntries);
   };
 
@@ -17,6 +64,20 @@ export default function AddProduct() {
 
   const handleReset = () => {
     document.querySelector('form').reset();
+    setFiles([]);
+    setErrorMessage("");
+    setFormData({ imageUrls: [] });
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    if (selectedFiles.length > 4) {
+      setErrorMessage("You can upload a maximum of 4 images.");
+      setFiles([]);
+    } else {
+      setErrorMessage("");
+      setFiles(selectedFiles);
+    }
   };
 
   return (
@@ -114,7 +175,7 @@ export default function AddProduct() {
           <button
             type="button"
             onClick={handleSelectAllSizes}
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-2 px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Select All
           </button>
@@ -136,7 +197,12 @@ export default function AddProduct() {
             accept="image/*"
             multiple
             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ref={fileRef}
+            onChange={handleFileChange}
           />
+          {errorMessage && (
+            <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+          )}
         </div>
         <div className="flex justify-end space-x-4">
           <button
