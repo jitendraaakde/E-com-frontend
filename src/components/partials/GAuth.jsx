@@ -18,6 +18,7 @@ const GAuth = () => {
                 body: JSON.stringify({ name: result.user.displayName, email: result.user.email, image: result.user.photoURL })
             })
             const data = await response.json()
+            console.log('data from google auth', data)
             if (data.success) {
                 navigate('/')
             }

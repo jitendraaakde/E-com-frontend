@@ -2,31 +2,68 @@ import { useEffect, useRef, useState } from 'react';
 import { FaPlus, FaRedoAlt } from 'react-icons/fa';
 import { getStorage, uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import { app } from '../../store/firebase';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ImCross } from "react-icons/im";
+
 
 export default function AddProduct() {
   const [files, setFiles] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [formData, setFormData] = useState({ imageUrls: [] });
+  const [formData, setFormData] = useState({ imageUrls: [], categories: [] });
+  const [imageUrls, setImageUrls] = useState([]);
   const fileRef = useRef();
-  console.log('image', files)
-  console.log('formData', formData)
+  const [availableCategories, setAvailableCategories] = useState([]);
+  const newCategory = useRef();
 
-  const handleImageSubmit = async () => {
-    if (files.length > 0 && files.length <= 4) {
-      console.log('storeimage', files)
-      const promises = files.map(file => storeImage(file));
-      try {
-        const urls = await Promise.all(promises);
-        setFormData({ ...formData, imageUrls: [...formData.imageUrls, ...urls] });
-      } catch (error) {
-        console.error('Error uploading images:', error);
+  const handleAddProduct = async (formEntries) => {
+    try {
+      const response = await fetch('/api/admin/add-product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formEntries),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.statusText}`);
       }
+    } catch (error) {
+      console.error('Add failed:', error.message);
     }
   };
 
+  const handleImageSubmit = async () => {
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        if (files.length > 0 && files.length <= 4) {
+          const promises = files.map(file => storeImage(file));
+          try {
+            const urls = await Promise.all(promises);
+            setImageUrls(urls);
+            setFormData({ ...formData, imageUrls: [...formData.imageUrls, ...urls] });
+          } catch (error) {
+            console.error('Error uploading images:', error);
+          }
+        } else {
+          setErrorMessage("Please select up to 4 images.");
+        }
+      } else {
+        setErrorMessage("You must be logged in to upload images.");
+        console.error("User is not authenticated");
+      }
+    });
+  };
+
   const storeImage = (file) => {
-    console.log('store image', file)
     return new Promise((resolve, reject) => {
+      if (!file.type.startsWith('image/')) {
+        reject('File is not an image');
+        return;
+      }
       const storage = getStorage(app);
       const fileName = `${new Date().getTime()}_${file.name}`;
       const storageRef = ref(storage, fileName);
@@ -36,11 +73,9 @@ export default function AddProduct() {
         'state_changed', null,
         (error) => reject(error),
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).
-            then((downloadUrl) => {
-              console.log('Tanishq', downloadUrl)
-              resolve(downloadUrl)
-            });
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            resolve(downloadUrl);
+          });
         }
       );
     });
@@ -50,10 +85,10 @@ export default function AddProduct() {
     e.preventDefault();
     const formEntries = Object.fromEntries(new FormData(e.target).entries());
     formEntries.sizes = new FormData(e.target).getAll('sizes');
-    await handleImageSubmit();
     formEntries.imageUrls = formData.imageUrls;
-
-    console.log('Submitting product:', formEntries);
+    formEntries.categories = formData.categories;
+    console.log('Form data which sent', formEntries);
+    handleAddProduct(formEntries);
   };
 
   const handleSelectAllSizes = () => {
@@ -62,11 +97,29 @@ export default function AddProduct() {
     });
   };
 
+  const handleCategorySelect = (e) => {
+    const selectedCategory = e.target.value;
+    if (selectedCategory && !formData.categories.includes(selectedCategory)) {
+      setFormData((prev) => ({
+        ...prev,
+        categories: [...prev.categories, selectedCategory],
+      }));
+    }
+  };
+
+  const handleRemoveCategory = (categoryToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      categories: prev.categories.filter(category => category !== categoryToRemove),
+    }));
+  };
+
   const handleReset = () => {
     document.querySelector('form').reset();
     setFiles([]);
     setErrorMessage("");
-    setFormData({ imageUrls: [] });
+    setFormData({ imageUrls: [], categories: [] });
+    setImageUrls([]);
   };
 
   const handleFileChange = (e) => {
@@ -79,6 +132,53 @@ export default function AddProduct() {
       setFiles(selectedFiles);
     }
   };
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/admin/get-category', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      let catArray = [];
+      for (let category of data.categories) {
+        catArray.push(category.name)
+      }
+      setAvailableCategories(catArray)
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('category fetch failed:', error.message);
+    }
+  }
+  const addNewCategory = async (category) => {
+    console.log(category)
+    try {
+      const response = await fetch('/api/admin/add-category', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(category)
+      });
+
+      const data = await response.json();
+      console.log('new category data ', data)
+      if (!response.ok) {
+        throw new Error(data.message || `Error: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('category Add failed:', error.message);
+    }
+  }
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
@@ -123,39 +223,68 @@ export default function AddProduct() {
               required
             />
           </div>
-          <div>
-            <label className="block mb-1 font-medium">MRP</label>
-            <input
-              type="number"
-              name="mrp"
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+
           <div>
             <label className="block mb-1 font-medium">Discount Percentage</label>
             <input
               type="number"
-              name="discount"
+              name="discountPercentage"
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-1 font-medium">Category</label>
+
+        <div className='flex justify-between items-center gap-3'>
+          <div className='w-[60%]'>
+            <label className="block mb-1 font-medium">Categories</label>
             <select
-              name="category"
+              onChange={handleCategorySelect}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
             >
-              <option value="">Select a category</option>
-              <option value="shirts">Shirts</option>
-              <option value="trousers">Trousers</option>
-              <option value="dresses">Dresses</option>
-              <option value="accessories">Accessories</option>
+              <option value="">Select a category</option  >
+              {availableCategories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </select>
+            <div className="mt-2 text-gray-700">
+              <ul className='flex gap-6'>
+                {formData.categories.map((category) => (
+                  <li key={category} className="flex justify-between items-center">
+                    {category}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCategory(category)}
+                      className="ml-2 text-xs"
+                    >
+                      <ImCross />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
+
+
+          <div className='w-[40%]'>
+            <label className=" mb-1 font-medium">Add new Category</label>
+            <div className='flex gap-2'>
+              <input ref={newCategory}
+                type="text"
+                name="newAddCategory"
+                className="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                className="p-2 bg-blue-400 text-white rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={() => addNewCategory(newCategory.current.value)}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+
+
         </div>
         <div>
           <label className="block mb-1 font-medium">Available Sizes</label>
@@ -189,20 +318,29 @@ export default function AddProduct() {
             required
           />
         </div>
-        <div>
-          <label className="block mb-1 font-medium">Product Images (up to 4)</label>
+        <label className="block mb-1 font-medium">Product Images (up to 4)</label>
+        <div className='flex gap-2'>
           <input
             type="file"
-            name="images"
             accept="image/*"
             multiple
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-[50%] p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             ref={fileRef}
             onChange={handleFileChange}
           />
-          {errorMessage && (
-            <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-          )}
+          <button
+            type="button"
+            onClick={handleImageSubmit}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          >
+            Upload Images
+          </button>
+        </div>
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+        <div className='flex gap-3'>
+          {imageUrls.map((url, index) => (
+            <img key={index} src={url} alt={`Uploaded ${index}`} className="rounded-md w-[10%]" />
+          ))}
         </div>
         <div className="flex justify-end space-x-4">
           <button
