@@ -5,7 +5,6 @@ import { app } from '../../store/firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ImCross } from "react-icons/im";
 
-
 export default function AddProduct() {
   const [files, setFiles] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -132,11 +131,6 @@ export default function AddProduct() {
       setFiles(selectedFiles);
     }
   };
-
-  useEffect(() => {
-    fetchCategories()
-  }, [])
-
   const fetchCategories = async () => {
     try {
       const response = await fetch('/api/admin/get-category', {
@@ -159,26 +153,29 @@ export default function AddProduct() {
       console.error('category fetch failed:', error.message);
     }
   }
-  const addNewCategory = async (category) => {
-    console.log(category)
+  const addNewCategory = async (categoryName) => {
+    newCategory.current.value = ''
     try {
       const response = await fetch('/api/admin/add-category', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(category)
+        body: JSON.stringify({ name: categoryName })
       });
 
       const data = await response.json();
-      console.log('new category data ', data)
-      if (!response.ok) {
-        throw new Error(data.message || `Error: ${response.statusText}`);
-      }
+
     } catch (error) {
-      console.error('category Add failed:', error.message);
+      console.error('Category add failed:', error.message);
     }
-  }
+  };
+  useEffect(() => {
+    fetchCategories()
+  }, [addNewCategory])
+
+
+
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
@@ -265,8 +262,6 @@ export default function AddProduct() {
               </ul>
             </div>
           </div>
-
-
           <div className='w-[40%]'>
             <label className=" mb-1 font-medium">Add new Category</label>
             <div className='flex gap-2'>

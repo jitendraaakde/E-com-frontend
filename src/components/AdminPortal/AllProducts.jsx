@@ -1,60 +1,83 @@
-// AllProducts.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaSearch } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { editProduct } from '../../store/adminSlice';
 
-export default function AllProducts({ onEdit }) {
-  const [products, setProducts] = useState([
-    { id: 1, name: 'T-Shirt', brand: 'Brand A', price: 19.99, stock: 100, image: 'placeholder.jpg' },
-    { id: 2, name: 'Jeans', brand: 'Brand B', price: 49.99, stock: 50, image: 'placeholder.jpg' },
-    // Add more sample products here
-  ]);
-
+export default function AllProducts() {
+  const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [itemsPerPage] = useState(10);
   const [search, setSearch] = useState('');
+  const dispatch = useDispatch()
 
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter((product) => product.id !== id));
+
+  const fetchProducts = async (page) => {
+    try {
+      const response = await fetch(`/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      console.log('Fetched products:', data);
+
+      if (response.ok) {
+        setProducts(data.products);
+        setCurrentPage(data.currentPage);
+        setTotalPages(data.totalPages);
+        setTotalProducts(data.totalProducts);
+      } else {
+        throw new Error(data.message || 'Error fetching products');
+      }
+    } catch (error) {
+      console.error('Fetch failed:', error.message);
     }
   };
 
-  const handleSort = (key) => {
-    if (sortBy === key) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(key);
-      setSortOrder('asc');
+  useEffect(() => {
+    fetchProducts(currentPage);
+  }, [currentPage]);
+
+  const deleteProduct = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/delete-product/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log('delete product data:', data);
+
+    } catch (error) {
+      console.error('Fetch failed:', error.message);
     }
-  };
-
-  const filteredProducts = products
-    .filter((product) =>
-      product.name.toLowerCase().includes(search.toLowerCase()) ||
-      product.brand.toLowerCase().includes(search.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (a[sortBy] < b[sortBy]) return sortOrder === 'asc' ? -1 : 1;
-      if (a[sortBy] > b[sortBy]) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
-
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredProducts.length / itemsPerPage); i++) {
-    pageNumbers.push(i);
+  }
+  const handleEdit = (id) => {
+    const productToEdit = filteredProducts.find((product) => product._id === id);
+    dispatch(editProduct(productToEdit))
   }
 
+  const handleDelete = (id) => {
+    console.log('Delete product id', id)
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      deleteProduct(id)
+      setProducts(products.filter((product) => product._id !== id));
+    }
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase()) ||
+    product.brand.name.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-4">All Products</h2>
-      
-      {/* Search Bar */}
+
       <div className="mb-4">
         <div className="relative">
           <input
@@ -68,42 +91,44 @@ export default function AllProducts({ onEdit }) {
         </div>
       </div>
 
-      {/* Product Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">Image</th>
-              <th className="py-3 px-6 text-left cursor-pointer" onClick={() => handleSort('name')}>Name</th>
-              <th className="py-3 px-6 text-left cursor-pointer" onClick={() => handleSort('brand')}>Brand</th>
-              <th className="py-3 px-6 text-left cursor-pointer" onClick={() => handleSort('price')}>Price</th>
-              <th className="py-3 px-6 text-left cursor-pointer" onClick={() => handleSort('stock')}>Stock</th>
+              <th className="py-3 px-6 text-left">Name</th>
+              <th className="py-3 px-6 text-left">Brand</th>
+              <th className="py-3 px-6 text-left">Price</th>
+              <th className="py-3 px-6 text-left">Stock</th>
               <th className="py-3 px-6 text-left">Actions</th>
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
-            {currentItems.map((product) => (
-              <tr key={product.id} className="border-b border-gray-200 hover:bg-gray-100">
+            {filteredProducts.map((product) => (
+              <tr key={product._id} className="border-b border-gray-200 hover:bg-gray-100">
                 <td className="py-3 px-6 text-left whitespace-nowrap">
-                  <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded" />
+                  <img
+                    src={product?.images?.length > 0 && product?.images[0]?.url}
+                    alt={product.name || 'Product Image'}
+                    className="w-16 h-18 object-cover rounded"
+                  />
                 </td>
                 <td className="py-3 px-6 text-left">{product.name}</td>
-                <td className="py-3 px-6 text-left">{product.brand}</td>
+                <td className="py-3 px-6 text-left">{product.brand.name}</td>
                 <td className="py-3 px-6 text-left">${product.price.toFixed(2)}</td>
                 <td className="py-3 px-6 text-left">{product.stock}</td>
                 <td className="py-3 px-6 text-left">
                   <div className="flex item-center justify-center">
-                    <button
-                      className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110"
-                      onClick={() => onEdit(product)}
+                    <button className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110"
+                      onClick={() => handleEdit(product._id)}
                     >
-                      <FaEdit />
+                      <FaEdit className='text-xl' />
                     </button>
                     <button
                       className="w-4 mr-2 transform hover:text-red-500 hover:scale-110"
-                      onClick={() => handleDelete(product.id)}
+                      onClick={() => handleDelete(product._id)}
                     >
-                      <FaTrash />
+                      <FaTrash className='text-xl' />
                     </button>
                   </div>
                 </td>
@@ -113,7 +138,6 @@ export default function AllProducts({ onEdit }) {
         </table>
       </div>
 
-      {/* Pagination Controls */}
       <div className="mt-4 flex flex-col sm:flex-row justify-between items-center">
         <div className="flex mb-4 sm:mb-0">
           <button
@@ -123,25 +147,25 @@ export default function AllProducts({ onEdit }) {
           >
             <FaChevronLeft />
           </button>
-          {pageNumbers.map((number) => (
+          {[...Array(totalPages).keys()].map((number) => (
             <button
               key={number}
-              className={`px-4 py-2 ${currentPage === number ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'} hover:bg-gray-400`}
-              onClick={() => setCurrentPage(number)}
+              className={`px-4 py-2 ${currentPage === number + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'} hover:bg-gray-400`}
+              onClick={() => setCurrentPage(number + 1)}
             >
-              {number}
+              {number + 1}
             </button>
           ))}
           <button
             className="px-4 py-2 bg-gray-300 text-gray-700 rounded-r hover:bg-gray-400"
             onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === pageNumbers.length}
+            disabled={currentPage === totalPages}
           >
             <FaChevronRight />
           </button>
         </div>
         <div className="text-gray-600">
-          Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredProducts.length)} of {filteredProducts.length} entries
+          Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalProducts)} of {totalProducts} entries
         </div>
       </div>
     </div>
