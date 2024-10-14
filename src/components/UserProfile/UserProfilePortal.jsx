@@ -4,6 +4,8 @@ import Addresses from './Addresses'
 import { IoLogOut } from "react-icons/io5";
 import OrderHistory from './OrderHistory';
 import { useSelector } from 'react-redux';
+import { RiEditBoxLine } from "react-icons/ri";
+
 
 
 export default function UserProfilePortal() {
@@ -69,17 +71,50 @@ export default function UserProfilePortal() {
 
 function ProfileContent() {
     const { user } = useSelector((store) => store.user);
+    const [editable, setEditable] = useState(true)
+    const handleEditable = () => {
+        setEditable(!editable)
+    }
+    console.log('user details', user)
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
-        console.log('Form Entries Object:', formEntries);
+        console.log(formEntries)
+        handleSubmitBackend(formEntries)
     };
+
+    const handleSubmitBackend = async (formEntries) => {
+        try {
+            const response = await fetch('/api/users/edit-user', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formEntries),
+            });
+
+            const data = await response.json();
+            console.log('user data from back', data.msg);
+            if (!response.ok) {
+                throw new Error(data.message || `Error: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Edit failed:', error.message);
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="space-y-6">
-                <h2 className="text-2xl font-bold">My Profile</h2>
+                <div className='flex justify-between'>
+                    <h2 className="text-2xl font-bold">My Profile</h2>
+                    <button type='button'
+                        className="w-full md:w-auto  flex justify-center items-center gap-3 font-bold text-xl" onClick={handleEditable}
+                    >Edit Information
+                        <RiEditBoxLine />
+                    </button>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
@@ -90,8 +125,9 @@ function ProfileContent() {
                             id="fullName"
                             name="name"
                             defaultValue={user?.name || ''}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 px-2 py-3 border-2"
                             placeholder="John Doe"
+                            disabled={editable}
                         />
                     </div>
                     <div className="space-y-2">
@@ -103,8 +139,10 @@ function ProfileContent() {
                             id="email"
                             name="email"
                             defaultValue={user?.email || ''}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 px-2 py-3 border-2"
                             placeholder="john@example.com"
+                            disabled={editable}
+
                         />
                     </div>
                     <div className="space-y-2">
@@ -116,42 +154,22 @@ function ProfileContent() {
                             id="phone"
                             name="phone"
                             defaultValue={user?.phone || ''}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            placeholder="+1 (555) 123-4567"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 px-2 py-3 border-2"
+                            placeholder="+91 xxxxxxxxxxx"
+                            disabled={editable}
+
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">
-                            Birthdate
-                        </label>
-                        <input
-                            type="date"
-                            id="birthdate"
-                            name="birthdate"
-                            defaultValue={user?.birthdate || ''}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        />
-                    </div>
-                    <div className="space-y-2 md:col-span-2">
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                            Address
-                        </label>
-                        <textarea
-                            id="address"
-                            name="address"
-                            defaultValue={user?.address || ''}
-                            rows={3}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            placeholder="Enter your full address"
-                        ></textarea>
-                    </div>
+
+
                 </div>
                 <button
                     type="submit"
                     className="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
-                    Save Changes
+                    Save Details
                 </button>
+
             </div>
         </form>
     );

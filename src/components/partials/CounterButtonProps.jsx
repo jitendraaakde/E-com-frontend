@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import React, { useState } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 export default function CounterButton({
   initialCount = 1,
@@ -7,26 +7,26 @@ export default function CounterButton({
   maxCount = 10,
   onChange
 }) {
-  const [count, setCount] = useState(initialCount)
+  const [count, setCount] = useState(initialCount);
 
   const decrementCount = () => {
     if (count > minCount) {
-      const newCount = count - 1
-      setCount(newCount)
-      onChange?.(newCount)
+      const newCount = count - 1;
+      setCount(newCount);
+      onChange?.(newCount);
     }
-  }
+  };
 
   const incrementCount = () => {
     if (count < maxCount) {
-      const newCount = count + 1
-      setCount(newCount)
-      onChange?.(newCount)
+      const newCount = count + 1;
+      setCount(newCount);
+      onChange?.(newCount);
     }
-  }
+  };
 
   return (
-    <div className="flex items-center justify-center space-x-2 pb-6">
+    <div className="flex items-center justify-center space-x-2 pb-6 pt-6">
       <button
         onClick={decrementCount}
         disabled={count <= minCount}
@@ -45,5 +45,5 @@ export default function CounterButton({
         <FaChevronRight className="text-gray-600" />
       </button>
     </div>
-  )
+  );
 }

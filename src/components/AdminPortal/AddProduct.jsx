@@ -13,8 +13,10 @@ export default function AddProduct() {
   const fileRef = useRef();
   const [availableCategories, setAvailableCategories] = useState([]);
   const newCategory = useRef();
+  const [msg, setMsg] = useState('')
 
   const handleAddProduct = async (formEntries) => {
+    console.log('formEntrries', formEntries)
     try {
       const response = await fetch('/api/admin/add-product', {
         method: 'POST',
@@ -25,7 +27,8 @@ export default function AddProduct() {
       });
 
       const data = await response.json();
-      console.log(data);
+      console.log(data.msg);
+      setMsg(data.msg)
       if (!response.ok) {
         throw new Error(data.message || `Error: ${response.statusText}`);
       }
@@ -337,6 +340,7 @@ export default function AddProduct() {
             <img key={index} src={url} alt={`Uploaded ${index}`} className="rounded-md w-[10%]" />
           ))}
         </div>
+        <p>{msg}</p>
         <div className="flex justify-end space-x-4">
           <button
             type="submit"

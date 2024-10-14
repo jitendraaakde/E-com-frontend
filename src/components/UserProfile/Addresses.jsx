@@ -1,9 +1,8 @@
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Addresses = () => {
-    // Example state for existing addresses (initial data)
     const [addresses, setAddresses] = useState([
         {
             id: 1,
@@ -15,11 +14,56 @@ const Addresses = () => {
         }
     ]);
 
+
+    const getAddresses = async () => {
+        try {
+            const response = await fetch('/api/users/get-addresses', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            console.log('address user data from back', data);
+            if (!response.ok) {
+                throw new Error(data.message || `Error: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Edit failed:', error.message);
+        }
+    }
+
+    const addAdresses = async (formEntries) => {
+        try {
+            const response = await fetch('/api/users/add-addresses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formEntries)
+            });
+
+            const data = await response.json();
+            console.log('address user data from back', data);
+            if (!response.ok) {
+                throw new Error(data.message || `Error: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Edit failed:', error.message);
+        }
+    }
+
+    useEffect(() => {
+        getAddresses()
+    }, [])
+
+
     const handleAddAddress = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
-        setAddresses([...addresses, { ...formEntries, id: addresses.length + 1 }]);
+        addAdresses(formEntries)
         e.target.reset();
     };
 

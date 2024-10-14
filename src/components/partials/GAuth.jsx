@@ -1,8 +1,11 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { app } from '../../store/firebase'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../../store/userSlice'
 const GAuth = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const handleGoogleClick = async () => {
         try {
             const provider = new GoogleAuthProvider()
@@ -18,7 +21,7 @@ const GAuth = () => {
                 body: JSON.stringify({ name: result.user.displayName, email: result.user.email, image: result.user.photoURL })
             })
             const data = await response.json()
-            console.log('data from google auth', data)
+            dispatch(loginUser(data.user))
             if (data.success) {
                 navigate('/')
             }

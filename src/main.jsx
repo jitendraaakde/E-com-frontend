@@ -15,6 +15,7 @@ import OrderHistory from './components/UserProfile/OrderHistory';
 import UserProfilePortal from './components/UserProfile/UserProfilePortal';
 import ContactUs from './components/majorCompo/ContactUs';
 import Home from './components/majorCompo/Home';
+import HomePage from './components/Homepage/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,9 @@ const router = createBrowserRouter([
         element: <Home />,
       }, {
         path: '/register', element: <Signup />
+      },
+      {
+        path: '/home', element: <HomePage />
       },
       {
         path: '/login', element: <Login />

@@ -1,24 +1,62 @@
-import { useState } from 'react'
-import Product from "./Product"
-import { FaThLarge, FaThList } from 'react-icons/fa'
+import { useEffect, useState } from 'react';
+import Product from './Product';
+import { useDispatch, useSelector } from 'react-redux';
+import { initialFetch } from '../../store/productSlice';
+import CounterButton from '../partials/CounterButtonProps';
 
 export default function Products() {
-  const [isGridView, setIsGridView] = useState(true)
-  const products = Array(20).fill(null) // Simulating 20 products
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 20;
+  const dispatch = useDispatch();
+  const productsObj = useSelector((state) => state.products);
+  const products = productsObj.productList
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          console.log("Fetched products: ", data.products);
+          dispatch(initialFetch(data.products));
+        } else {
+          throw new Error(data.message || 'Error fetching products');
+        }
+      } catch (error) {
+        console.error('Fetch failed:', error.message);
+      }
+    };
+
+    fetchProducts();
+  }, [page, dispatch]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        {products && products.length > 0 ? (
+          products.map((product, index) => (
+            <Product key={index} product={product} />
+          ))
+        ) : (
+          <p>No products available.</p>
+        )}
       </div>
-      <div className={`grid gap-4 ${
-        isGridView 
-          ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5' 
-          : 'grid-cols-1'
-      }`}>
-        {products.map((_, index) => (
-          <Product key={index} isListView={!isGridView} />
-        ))}
-      </div>
+      <CounterButton
+        initialCount={page}
+        minCount={1}
+        maxCount={10}
+        onChange={handlePageChange}
+      />
     </div>
-  )
+  );
 }
