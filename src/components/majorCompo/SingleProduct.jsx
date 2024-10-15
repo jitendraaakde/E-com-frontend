@@ -1,6 +1,5 @@
 import React from 'react'
 import { FaHeart, FaExchangeAlt, FaShoppingCart, FaStar, FaTruck, FaUndo } from 'react-icons/fa'
-// Import product images
 import product_img1 from '../../../public/product 2.png'
 import product_img2 from '../../../public/product 3.png'
 import product_img3 from '../../../public/product 4.png'
@@ -8,7 +7,6 @@ import product_img4 from '../../../public/product 5.png'
 import main_product_img from '../../../public/product_image.png'
 
 export default function SingleProduct() {
-    // Array of product images
     const productImages = [product_img1, product_img2, product_img3, product_img4];
 
     return (

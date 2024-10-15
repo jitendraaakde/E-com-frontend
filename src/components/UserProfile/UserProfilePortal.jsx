@@ -5,6 +5,7 @@ import { IoLogOut } from "react-icons/io5";
 import OrderHistory from './OrderHistory';
 import { useSelector } from 'react-redux';
 import { RiEditBoxLine } from "react-icons/ri";
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -175,60 +176,203 @@ function ProfileContent() {
     );
 }
 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 function ChangePasswordContent() {
+    const [showPass, setShowPass] = useState({
+        curr: false,
+        new: false,
+        confirm: false
+    });
+
+    const [passConfirm, setPassConfirm] = useState({
+        newPass: '',
+        confirmPass: ''
+    });
+
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleNewPassword = (value) => {
+        setPassConfirm((prev) => ({
+            ...prev,
+            newPass: value
+        }));
+    };
+
+    const handleConfirmPassword = (value) => {
+        setPassConfirm((prev) => ({
+            ...prev,
+            confirmPass: value
+        }));
+    };
+
+    const changePassword = async (formEntries) => {
+        try {
+            const response = await fetch(`/api/users/change-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formEntries)
+            });
+
+            const data = await response.json();
+            console.log('Update password', data);
+        } catch (error) {
+            console.error('Fetch failed:', error.message);
+        }
+    }
+
+    const handlePasswordChange = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formEntries = Object.fromEntries(formData.entries());
+
+        if (passConfirm.newPass !== passConfirm.confirmPass) {
+            setError('Passwords do not match!');
+            return;
+        }
+        changePassword(formEntries)
+        setError('');
+    };
+
+    const togglePasswordVisibility = (field) => {
+        setShowPass((prev) => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
+
+    // Check if passwords match and all fields are valid
+    const isFormValid = () => {
+        return (
+            currentPassword &&
+            passConfirm.newPass &&
+            passConfirm.confirmPass &&
+            passConfirm.newPass === passConfirm.confirmPass
+        );
+    };
+
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold">Change Password</h2>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handlePasswordChange}>
                 <div className="space-y-2">
                     <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">
                         Current Password
                     </label>
-                    <input
-                        type="password"
-                        id="currentPassword"
-                        name="currentPassword"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        required
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPass.curr ? "text" : "password"}
+                            id="currentPassword"
+                            name="currentPassword"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2"
+                            required
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('curr')}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                            {showPass.curr ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
                 </div>
                 <div className="space-y-2">
                     <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
                         New Password
                     </label>
-                    <input
-                        type="password"
-                        id="newPassword"
-                        name="newPassword"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        required
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPass.new ? "text" : "password"}
+                            id="newPassword"
+                            name="newPassword"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            required
+                            value={passConfirm.newPass}
+                            onChange={(e) => handleNewPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('new')}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                            {showPass.new ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
                 </div>
                 <div className="space-y-2">
                     <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                         Confirm New Password
                     </label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        required
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPass.confirm ? "text" : "password"}
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            className="mt-1 block w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            required
+                            value={passConfirm.confirmPass}
+                            onChange={(e) => handleConfirmPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility('confirm')}
+                            className="absolute inset-y-0 right-0 flex items-center pr-3"
+                        >
+                            {showPass.confirm ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                    </div>
                 </div>
+
+                {error && <p className="text-red-500">{error}</p>}
+
+                {!error && passConfirm.newPass !== passConfirm.confirmPass && (
+                    <p className="text-red-500">New password and confirm password do not match</p>
+                )}
+
                 <button
                     type="submit"
-                    className="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    className={`w-full md:w-auto px-4 py-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-opacity-50 ${isFormValid()
+                        ? "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500"
+                        : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                    disabled={!isFormValid()}
                 >
                     Update Password
                 </button>
             </form>
         </div>
-    )
+    );
 }
 
 function DeleteAccountContent() {
     const [showConfirmation, setShowConfirmation] = useState(false)
+    const navigate = useNavigate()
+
+    const handleDeleteUser = async (id) => {
+        try {
+            const response = await fetch(`/api/users/delete-user`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                navigate('/')
+            }
+            if (!response.ok) {
+                throw new Error(data.message || `Error: ${response.statusText}`);
+            }
+
+        } catch (error) {
+            console.error('Delete failed:', error.message);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -246,9 +390,11 @@ function DeleteAccountContent() {
                     <strong className="font-bold">Are you sure you want to delete your account?</strong>
                     <p className="text-sm">Please confirm your decision.</p>
                     <div className="mt-4">
-                        <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2">
+
+                        <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2" onClick={handleDeleteUser}>
                             Yes, Delete
                         </button>
+
                         <button
                             onClick={() => setShowConfirmation(false)}
                             className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
