@@ -1,23 +1,39 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { initialFetch } from '../store/productSlice';
+import CounterButton from './partials/CounterButtonProps';
+import Product from './products/Product';
+import { FaFilter, FaChevronDown } from 'react-icons/fa'; // Imported icons
+import Cart from './newCart';
+import CartComponent from './secondNewCart';
+
+const Example = () => {
+  return (
+    <>
+      {/* <FilterBar />
+      <Products /> */}
+      {/* E-coomerce store contains filter bar */}
+      {/* <EcommerceStore /> */}
+      {/* <Cart /> */}
+      <CartComponent />
 
 
-const Home = () => {
-    return <>
-        <FilterBar></FilterBar>
-        <Products></Products>
     </>
-}
-export default Home 
+  );
+};
 
- function FilterBar() {
-  const [sortOption, setSortOption] = useState("Price: Low to High")
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false)
+export default Example;
 
-  const filterArr = ['All Products', 'T-Shirt', 'Denim', 'SweatShirts', 'Polo T-Shirt', 'Shirt']
-  const sortOptions = ["Price: Low to High", "Price: High to Low", "New Arrivals", "Popularity"]
+function FilterBar() {
+  const [sortOption, setSortOption] = useState("Price: Low to High");
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
-  const toggleFilterDropdown = () => setIsFilterDropdownOpen(!isFilterDropdownOpen)
-  const toggleSortDropdown = () => setIsSortDropdownOpen(!isSortDropdownOpen)
+  const filterArr = ['All Products', 'T-Shirt', 'Denim', 'SweatShirts', 'Polo T-Shirt', 'Shirt'];
+  const sortOptions = ["Price: Low to High", "Price: High to Low", "New Arrivals", "Popularity"];
+
+  const toggleFilterDropdown = () => setIsFilterDropdownOpen(!isFilterDropdownOpen);
+  const toggleSortDropdown = () => setIsSortDropdownOpen(!isSortDropdownOpen);
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center m-3 space-y-4 sm:space-y-0">
@@ -33,7 +49,9 @@ export default Home
         <div className="hidden sm:flex flex-wrap items-center gap-2">
           <p className="text-xs font-medium mr-2">Filters:</p>
           {filterArr.map((item, index) => (
-            <FilterItem key={index} item={item} />
+            <button key={index} className="text-sm px-2 py-1 bg-gray-200 rounded-full">
+              {item}
+            </button>
           ))}
         </div>
 
@@ -70,8 +88,8 @@ export default Home
                   key={index}
                   className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100 text-slate-700"
                   onClick={() => {
-                    setSortOption(option)
-                    setIsSortDropdownOpen(false)
+                    setSortOption(option);
+                    setIsSortDropdownOpen(false);
                   }}
                 >
                   {option}
@@ -82,21 +100,15 @@ export default Home
         )}
       </div>
     </div>
-  )
+  );
 }
-
-import { useEffect, useState } from 'react';
-import Product from './Product';
-import { useDispatch, useSelector } from 'react-redux';
-import { initialFetch } from '../../store/productSlice';
-import CounterButton from '../partials/CounterButtonProps';
 
 function Products() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
   const dispatch = useDispatch();
   const productsObj = useSelector((state) => state.products);
-  const products = productsObj.productList
+  const products = productsObj.productList;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -108,12 +120,13 @@ function Products() {
           },
         });
 
-        const data = await response.json();
         if (response.ok) {
+          const data = await response.json();
           console.log("Fetched products: ", data.products);
-          dispatch(initialFetch(data.products));
+          dispatch(initialFetch({ products: data.products })); // Dispatch properly with payload
         } else {
-          throw new Error(data.message || 'Error fetching products');
+          const errorData = await response.json(); // Moved here to ensure error handling
+          throw new Error(errorData.message || 'Error fetching products');
         }
       } catch (error) {
         console.error('Fetch failed:', error.message);

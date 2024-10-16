@@ -78,7 +78,6 @@ const CartComponent = () => {
                   key={item.id}
                   className="bg-white rounded-lg shadow-md p-6 mb-4 relative overflow-hidden group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 transform -skew-y-12 opacity-0 group-hover:opacity-10 transition-opacity duration-300 ease-in-out"></div>
                   <div className="flex items-center">
                     <img
                       src={item.image}

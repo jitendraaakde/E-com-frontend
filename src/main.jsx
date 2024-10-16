@@ -8,7 +8,7 @@ import Login from './components/majorCompo/Login';
 import SingleProduct from './components/majorCompo/SingleProduct';
 import Cart from './components/majorCompo/Cart';
 import { Provider } from 'react-redux';
-import { store, persistor } from './store/index'; // Import both store and persistor
+import { store, persistor } from './store/index';
 import { PersistGate } from 'redux-persist/integration/react';
 import AdminDashboard from './components/AdminPortal/AdminDashboard';
 import OrderHistory from './components/UserProfile/OrderHistory';
@@ -16,6 +16,7 @@ import UserProfilePortal from './components/UserProfile/UserProfilePortal';
 import ContactUs from './components/majorCompo/ContactUs';
 import Home from './components/majorCompo/Home';
 import HomePage from './components/Homepage/HomePage';
+import Example from './components/example';
 
 const router = createBrowserRouter([
   {
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
         path: '/login', element: <Login />
       }, {
         //confirm
-        path: '/product/:productId', element: <SingleProduct />
+        path: '/product/:id', element: <SingleProduct />
       }, {
         path: '/cart', element: <Cart />
       }
@@ -53,6 +54,9 @@ const router = createBrowserRouter([
       , {
         //confirm
         path: '/contact', element: <ContactUs />
+      }, {
+        path: '/example', element: <Example />
+
       }
     ]
   },

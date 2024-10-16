@@ -5,8 +5,9 @@ import { IoLogOut } from "react-icons/io5";
 import OrderHistory from './OrderHistory';
 import { useSelector } from 'react-redux';
 import { RiEditBoxLine } from "react-icons/ri";
-import { useNavigate } from 'react-router-dom'
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { persistor } from '../../store';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function UserProfilePortal() {
@@ -176,7 +177,6 @@ function ProfileContent() {
     );
 }
 
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 function ChangePasswordContent() {
     const [showPass, setShowPass] = useState({
         curr: false,
@@ -352,7 +352,7 @@ function DeleteAccountContent() {
     const [showConfirmation, setShowConfirmation] = useState(false)
     const navigate = useNavigate()
 
-    const handleDeleteUser = async (id) => {
+    const handleDeleteUser = async () => {
         try {
             const response = await fetch(`/api/users/delete-user`, {
                 method: 'DELETE',
@@ -362,17 +362,24 @@ function DeleteAccountContent() {
             });
 
             const data = await response.json();
-            if (data.success) {
-                navigate('/')
-            }
+
             if (!response.ok) {
                 throw new Error(data.message || `Error: ${response.statusText}`);
+            }
+
+            if (data.success) {
+                await persistor.purge();
+
+                navigate('/');
+            } else {
+                navigate('/login');
             }
 
         } catch (error) {
             console.error('Delete failed:', error.message);
         }
     };
+
 
     return (
         <div className="space-y-6">
@@ -409,6 +416,31 @@ function DeleteAccountContent() {
 }
 function LogoutUser() {
     const [showConfirmation, setShowConfirmation] = useState(false)
+    const navigate = useNavigate()
+    const handleUserLogout = async () => {
+        try {
+            const response = await fetch(`/api/users/logout`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                await persistor.purge();
+
+                console.log('User logged out, purged data, and navigate to home');
+                navigate('/');
+            } else {
+                throw new Error(data.message || 'Error logging out');
+            }
+        } catch (error) {
+            console.error('Logout failed:', error.message);
+        }
+    };
+
 
     return (
         <div className="space-y-6">
@@ -427,7 +459,7 @@ function LogoutUser() {
                     <strong className="font-bold">Are you sure you want to logout from your account?</strong>
                     <p className="text-sm">Please confirm your decision.</p>
                     <div className="mt-4">
-                        <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2">
+                        <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 mr-2" onClick={handleUserLogout}>
                             Yes, Logout
                         </button>
                         <button

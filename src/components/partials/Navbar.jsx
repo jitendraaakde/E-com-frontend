@@ -29,7 +29,7 @@ export default function Navbar() {
                         <NavLink to="/">Home</NavLink>
                         <NavLink to="/register">Signup</NavLink>
                         <NavLink to="/login">Login</NavLink>
-                        <NavLink to="/product/:productId">Single Product</NavLink>
+                        <NavLink to="/product/670f61c3d261f687315cb803">Single Product</NavLink>
                         <NavLink to="/cart">Cart</NavLink>
                         <NavLink to="/order-history">Order History</NavLink>
                         <NavLink to="/admin-portal">Admin Portal</NavLink>
@@ -37,7 +37,6 @@ export default function Navbar() {
                         <NavLink to="/contact">contact</NavLink>
                     </div>
 
-                    {/* Icons in desktop view */}
                     <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
                         <NavIcon to="/search" icon={CiSearch} text="Search" />
                         <NavIcon to="/profile" icon={CiUser} text="Account" />
