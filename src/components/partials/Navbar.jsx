@@ -1,11 +1,45 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CiSearch, CiUser } from 'react-icons/ci'
 import { LuShoppingCart } from 'react-icons/lu'
 import { HiMenu, HiX } from 'react-icons/hi'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { SliceAddToCart } from '../../store/cartSlice'
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const cart = useSelector(state => state.cart)
+    console.log(cart)
+    const dispatch = useDispatch()
+    const getCartItems = async () => {
+        try {
+            const response = await fetch(`/api/product/get-cart-items`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            console.log('data from back', data.cart)
+            if (response.ok) {
+                if (data.cart) {
+                    dispatch(SliceAddToCart({ cart: data.cart, count: data.cart.length }));
+                } else {
+                    throw new Error('Cart data not found in response');
+                }
+            } else {
+                throw new Error(data.message || 'Error fetching cart items');
+            }
+        } catch (error) {
+            console.error('Fetch failed:', error.message);
+        }
+    };
+
+    useEffect(() => {
+        getCartItems()
+    }, [])
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -40,7 +74,18 @@ export default function Navbar() {
                     <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
                         <NavIcon to="/search" icon={CiSearch} text="Search" />
                         <NavIcon to="/profile" icon={CiUser} text="Account" />
-                        <NavIcon to="/cart" icon={LuShoppingCart} text="Cart" />
+                        <Link
+                            to={'/cart'}
+                            className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                        >
+                            <div className="relative">
+                                <LuShoppingCart className="h-5 w-5" />
+                                <span
+                                    className="absolute -top-1 -right-1 bg-red-400 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+                                >{cart?.totalItems}
+                                </span>
+                            </div>
+                        </Link>
                     </div>
 
                     <div className="flex items-center sm:hidden">
@@ -70,10 +115,25 @@ export default function Navbar() {
 
                     <div className="pt-4 pb-3 border-t border-gray-200">
                         <div className="flex items-center px-4 space-x-4">
-                            {/* Icons in mobile view with navigation */}
-                            <NavIcon to="/search" icon={CiSearch} />
-                            <NavIcon to="/profile" icon={CiUser} />
-                            <NavIcon to="/cart" icon={LuShoppingCart} />
+                            <Link to={'/search'} className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                                <CiSearch className="h-5 w-5" />
+                            </Link>
+                            <Link to={'/profile'} className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                                <CiUser className="h-5 w-5" />
+                            </Link>
+
+                            <Link
+                                to={'/cart'}
+                                className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                            >
+                                <div className="relative">
+                                    <LuShoppingCart className="h-5 w-5" />
+                                    <span
+                                        className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3 flex items-center justify-center"
+                                    >{cart?.totalItems}
+                                    </span>
+                                </div>
+                            </Link>
                         </div>
                     </div>
                 </div>

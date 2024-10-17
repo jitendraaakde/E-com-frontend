@@ -27,9 +27,9 @@ const Cart = () => {
     };
 
 
-    useEffect(() => {
-        fetchCartItem();
-    }, []);
+    // useEffect(() => {
+    //     fetchCartItem();
+    // }, []);
 
 
     return (

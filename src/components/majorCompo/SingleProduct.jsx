@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { FaHeart, FaExchangeAlt, FaShoppingCart, FaStar, FaTruck, FaUndo } from 'react-icons/fa'
+import { useDispatch } from 'react-redux'
 
 import { useParams } from 'react-router-dom'
+import { SliceAddToCart } from '../../store/cartSlice'
+// import { SliceAddToCart } from '../../store/cartSlice'
 
 export default function SingleProduct() {
     const [productData, setProductData] = useState(null)
     const [hoverImage, setHoverImage] = useState()
+    const dispatch = useDispatch()
+
     const { id } = useParams()
+    console.log('product id', id)
 
     const handleSingleProduct = async (id) => {
         try {
@@ -40,6 +46,7 @@ export default function SingleProduct() {
     const handleSizeButton = (sizeObj) => {
         setClickSize(sizeObj)
     }
+
     const addToCart = async (productId, size) => {
         try {
             const response = await fetch(`/api/product/add-cart`, {
@@ -52,7 +59,10 @@ export default function SingleProduct() {
 
             const data = await response.json();
             if (response.ok) {
-                console.log('cart status', data)
+                dispatch(SliceAddToCart(data.cart))
+                if (data.success) {
+                    setMessage('Product Added to cart ')
+                }
             } else {
                 throw new Error(data.message || 'Error fetching products');
             }
@@ -61,19 +71,20 @@ export default function SingleProduct() {
         }
     }
 
-    const handleAddToCart = (product) => {
+    const handleAddToCart = (product, clickSize) => {
         if (!clickSize) {
             setMessage('Please choose size before Add to Cart')
             return
         } else {
             setMessage('')
-            // product id and size
-            addToCart(product._id, clickSize)
+            console.log('Product ', product, 'Size', clickSize)
+            addToCart(product, clickSize)
+            // dispatch(SliceAddToCart({ product, clickSize }))
         }
     }
     useEffect(() => {
         handleSingleProduct(id)
-    }, [id])
+    }, [])
 
     return <>
         {productData &&
@@ -144,7 +155,7 @@ export default function SingleProduct() {
                             <div className="space-y-4 mt-4">
                                 <p>{message}</p>
                                 <div className="flex items-center space-x-4">
-                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-400" onClick={() => handleAddToCart(productData)}>
+                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-400" onClick={() => handleAddToCart(productData, clickSize)}>
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Add to Cart
                                     </button>
