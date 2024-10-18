@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { FaHeart, FaExchangeAlt, FaShoppingCart, FaStar, FaTruck, FaUndo } from 'react-icons/fa'
-import { useDispatch } from 'react-redux'
+import { TiTickOutline } from "react-icons/ti";
 
-import { useParams } from 'react-router-dom'
-import { SliceAddToCart } from '../../store/cartSlice'
-// import { SliceAddToCart } from '../../store/cartSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { checkAlreadyInCart, SliceAddToCart } from '../../store/cartSlice'
 
 export default function SingleProduct() {
     const [productData, setProductData] = useState(null)
     const [hoverImage, setHoverImage] = useState()
+    const { alreadyInCart } = useSelector(state => state.cart)
+    const navigate = useNavigate()
     const dispatch = useDispatch()
-
     const { id } = useParams()
-    console.log('product id', id)
 
     const handleSingleProduct = async (id) => {
         try {
@@ -24,16 +24,26 @@ export default function SingleProduct() {
             });
 
             const data = await response.json();
-            if (response.ok) {
-                setProductData(data.product)
-                setHoverImage(data.product.images[0]?.url)
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Error fetching product');
+            }
+
+            console.log('data product', data.product);
+
+            if (data.product) {
+                setProductData(data.product);
+                setHoverImage(data.product.images?.[0]?.url || '');
+                dispatch(checkAlreadyInCart(data.product));
             } else {
-                throw new Error(data.message || 'Error fetching products');
+                throw new Error('Product data is missing');
             }
         } catch (error) {
             console.error('Fetch failed:', error.message);
         }
-    }
+    };
+
+
     const calculateAmount = (price, disPercent) => {
         return Math.round(price - (price * (disPercent / 100)))
     }
@@ -58,9 +68,10 @@ export default function SingleProduct() {
             });
 
             const data = await response.json();
+            console.log(data)
             if (response.ok) {
-                dispatch(SliceAddToCart(data.cart))
                 if (data.success) {
+                    dispatch(SliceAddToCart({ items: data.cart.items, totalItems: data.cart.items.length }))
                     setMessage('Product Added to cart ')
                 }
             } else {
@@ -77,10 +88,12 @@ export default function SingleProduct() {
             return
         } else {
             setMessage('')
-            console.log('Product ', product, 'Size', clickSize)
             addToCart(product, clickSize)
-            // dispatch(SliceAddToCart({ product, clickSize }))
         }
+    }
+
+    const handleRemoveFromCart = () => {
+
     }
     useEffect(() => {
         handleSingleProduct(id)
@@ -129,8 +142,8 @@ export default function SingleProduct() {
                                 </p>
 
                                 <div className="flex items-center space-x-4">
-                                    <span className="text-3xl lg:text-4xl font-bold text-primary">${calculateAmount(productData.price, productData.discountPercentage)}</span>
-                                    <span className="text-xl lg:text-2xl text-gray-500 line-through">${productData.price}</span>
+                                    <span className="text-3xl lg:text-4xl font-bold text-primary">₹{calculateAmount(productData.price, productData.discountPercentage)}</span>
+                                    <span className="text-xl lg:text-2xl text-gray-500 line-through">₹{productData.price}</span>
                                     <span className="text-sm lg:text-base font-semibold text-green-500 bg-green-100 px-3 py-1 rounded-full">
                                         {productData.discountPercentage}% OFF
                                     </span>
@@ -155,10 +168,16 @@ export default function SingleProduct() {
                             <div className="space-y-4 mt-4">
                                 <p>{message}</p>
                                 <div className="flex items-center space-x-4">
-                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-400" onClick={() => handleAddToCart(productData, clickSize)}>
+
+                                    {!alreadyInCart ? <button className="flex-1 bg-primary hover:bg-primary-dark font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-500 text-white" onClick={() => handleAddToCart(productData, clickSize)}>
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Add to Cart
-                                    </button>
+                                    </button> :
+                                        <button className="flex-1 bg-primary hover:bg-primary-darkfont-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-500 text-white" onClick={() => navigate('/cart')}>
+                                            <TiTickOutline className="inline-block mr-2 text-2xl" />
+                                            Already in cart
+                                        </button>}
+
                                     <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-blue-400">
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Buy now
@@ -169,7 +188,7 @@ export default function SingleProduct() {
                                 <div className="flex items-center justify-between text-sm text-gray-600 border-t border-b border-gray-200 py-4">
                                     <div className="flex items-center space-x-2">
                                         <FaTruck className="text-primary" />
-                                        <span>Free shipping on orders over $100</span>
+                                        <span>Free shipping on orders over ₹100</span>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <FaUndo className="text-primary" />

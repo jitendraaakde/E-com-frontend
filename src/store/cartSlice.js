@@ -1,26 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-
-const removeFromCart = () => {
-
-}
-
 const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         items: [],
         totalItems: 0,
+        alreadyInCart: false
     },
     reducers: {
         SliceAddToCart: (state, action) => {
-            state.items = action.payload.cart
-            state.totalItems = action.payload.count
+            state.items = action.payload.items
+            state.totalItems = action.payload.totalItems
         },
-        addProduct: (state, action) => {
-            state.totalItems;
-        }
+        checkAlreadyInCart: (state, action) => {
+            state.alreadyInCart = state.items.some((item) => item.productId === action.payload._id);
+        },
     },
 });
 
-export const { SliceAddToCart, addProduct } = cartSlice.actions;
+export const { SliceAddToCart, removeFromCart, checkAlreadyInCart } = cartSlice.actions;
 export default cartSlice.reducer;

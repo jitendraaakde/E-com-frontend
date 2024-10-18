@@ -122,7 +122,6 @@ function Products() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Fetched products: ", data.products);
           dispatch(initialFetch({ products: data.products })); // Dispatch properly with payload
         } else {
           const errorData = await response.json(); // Moved here to ensure error handling

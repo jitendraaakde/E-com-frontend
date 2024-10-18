@@ -5,7 +5,9 @@ import Navbar from "./components/partials/Navbar"
 const Layout = () => {
     return <>
         <Navbar></Navbar>
-        <Outlet />
+        <div className="mt-16">
+            <Outlet />
+        </div>
         <Footer></Footer>
     </>
 }

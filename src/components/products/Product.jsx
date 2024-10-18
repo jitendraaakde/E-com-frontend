@@ -21,8 +21,8 @@ export default function Product({ product }) {
           <p className="text-gray-600 text-sm mb-2 overflow-hidden text-ellipsis whitespace-nowrap">{product.name}</p>
 
           <div className="flex items-center space-x-2">
-            <span className="font-bold text-lg">${calculateAmount(product.price, product.discountPercentage)}</span>
-            <span className="text-gray-500 line-through text-sm">{product.price}</span>
+            <span className="font-bold text-lg">₹{calculateAmount(product.price, product.discountPercentage)}</span>
+            <span className="text-gray-500 line-through text-sm">₹{product.price}</span>
             <span className="text-green-600 text-sm">{product.discountPercentage}% off</span>
           </div>
         </div>

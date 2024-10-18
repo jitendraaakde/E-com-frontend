@@ -35,8 +35,6 @@ export default function EditProduct({ product }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Updating product:', editedProduct);
-    // Here you would typically send the updated data to your backend
   };
 
   if (!editedProduct) return <div className="text-center py-4">Loading...</div>;

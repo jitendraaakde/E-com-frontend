@@ -10,7 +10,6 @@ import { SliceAddToCart } from '../../store/cartSlice'
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const cart = useSelector(state => state.cart)
-    console.log(cart)
     const dispatch = useDispatch()
     const getCartItems = async () => {
         try {
@@ -22,10 +21,10 @@ export default function Navbar() {
             });
 
             const data = await response.json();
-            console.log('data from back', data.cart)
             if (response.ok) {
                 if (data.cart) {
-                    dispatch(SliceAddToCart({ cart: data.cart, count: data.cart.length }));
+                    dispatch(SliceAddToCart({ items: data.cart, totalItems: data.cart.length }));
+                    console.log('Navbar', data.cart)
                 } else {
                     throw new Error('Cart data not found in response');
                 }
@@ -46,7 +45,7 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="w-full border-b border-gray-200">
+        <nav className="w-full border-b border-gray-200 top-0 fixed bg-white z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex-shrink-0 flex items-center">
@@ -81,10 +80,11 @@ export default function Navbar() {
                             <div className="relative">
                                 <LuShoppingCart className="h-5 w-5" />
                                 <span
-                                    className="absolute -top-1 -right-1 bg-red-400 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+                                    className="absolute -top-2 -right-2 bg-red-400 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center "
                                 >{cart?.totalItems}
                                 </span>
                             </div>
+
                         </Link>
                     </div>
 
@@ -129,7 +129,7 @@ export default function Navbar() {
                                 <div className="relative">
                                     <LuShoppingCart className="h-5 w-5" />
                                     <span
-                                        className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3 flex items-center justify-center"
+                                        className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-3 h-3 flex items-center justify-center"
                                     >{cart?.totalItems}
                                     </span>
                                 </div>

@@ -77,12 +77,10 @@ function ProfileContent() {
     const handleEditable = () => {
         setEditable(!editable)
     }
-    console.log('user details', user)
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
-        console.log(formEntries)
         handleSubmitBackend(formEntries)
     };
 
@@ -97,7 +95,6 @@ function ProfileContent() {
             });
 
             const data = await response.json();
-            console.log('user data from back', data.msg);
             if (!response.ok) {
                 throw new Error(data.message || `Error: ${response.statusText}`);
             }
@@ -217,7 +214,6 @@ function ChangePasswordContent() {
             });
 
             const data = await response.json();
-            console.log('Update password', data);
         } catch (error) {
             console.error('Fetch failed:', error.message);
         }
@@ -431,7 +427,6 @@ function LogoutUser() {
             if (response.ok) {
                 await persistor.purge();
 
-                console.log('User logged out, purged data, and navigate to home');
                 navigate('/');
             } else {
                 throw new Error(data.message || 'Error logging out');

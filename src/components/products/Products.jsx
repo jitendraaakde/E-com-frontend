@@ -23,7 +23,6 @@ export default function Products() {
 
         const data = await response.json();
         if (response.ok) {
-          console.log("Fetched products: ", data.products);
           dispatch(initialFetch(data.products));
         } else {
           throw new Error(data.message || 'Error fetching products');

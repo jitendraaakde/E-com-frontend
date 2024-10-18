@@ -23,7 +23,6 @@ export default function AllProducts() {
       });
 
       const data = await response.json();
-      console.log('Fetched products:', data);
 
       if (response.ok) {
         setProducts(data.products);
@@ -51,7 +50,6 @@ export default function AllProducts() {
         },
       });
       const data = await response.json();
-      console.log('delete product data:', data);
 
     } catch (error) {
       console.error('Fetch failed:', error.message);
@@ -63,7 +61,6 @@ export default function AllProducts() {
   }
 
   const handleDelete = (id) => {
-    console.log('Delete product id', id)
     if (window.confirm('Are you sure you want to delete this product?')) {
       deleteProduct(id)
       setProducts(products.filter((product) => product._id !== id));
