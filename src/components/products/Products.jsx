@@ -3,16 +3,19 @@ import Product from './Product';
 import { useDispatch, useSelector } from 'react-redux';
 import { initialFetch } from '../../store/productSlice';
 import CounterButton from '../partials/CounterButtonProps';
+import LoadingSpinner from '../partials/LoadingSpinner'; // Ensure you have this component
 
 export default function Products() {
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 20;
   const dispatch = useDispatch();
   const productsObj = useSelector((state) => state.products);
-  const products = productsObj.productList
+  const products = productsObj?.productList || [];
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
           method: 'GET',
@@ -29,6 +32,8 @@ export default function Products() {
         }
       } catch (error) {
         console.error('Fetch failed:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -41,21 +46,27 @@ export default function Products() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {products && products.length > 0 ? (
-          products.map((product, index) => (
-            <Product key={index} product={product} />
-          ))
-        ) : (
-          <p>No products available.</p>
-        )}
-      </div>
-      <CounterButton
-        initialCount={page}
-        minCount={1}
-        maxCount={10}
-        onChange={handlePageChange}
-      />
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {products.length > 0 ? (
+              products.map((product, index) => (
+                <Product key={index} product={product} />
+              ))
+            ) : (
+              <p>No products available.</p>
+            )}
+          </div>
+          <CounterButton
+            initialCount={page}
+            minCount={1}
+            maxCount={10}
+            onChange={handlePageChange}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -65,12 +65,11 @@ const CartComponent = () => {
         }
     };
 
-    const handleProductClick = (id) => {
-        navigate(`product/${id}`)
+    const calculateAmount = (price, disPercent) => {
+        return Math.round(price - (price * (disPercent / 100)))
     }
 
-
-    const subtotal = items.reduce((sum, item) => sum + item.productId.price * item.quantity, 0);
+    const subtotal = items.reduce((sum, item) => sum + calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity, 0);
     const shipping = 120;
     const tax = subtotal * 0.03;
     const total = subtotal + shipping + tax;
@@ -104,8 +103,10 @@ const CartComponent = () => {
                                                 </h3>
                                             </Link>
                                             <p className="text-sm text-gray-500">{item.productId.brand.name}</p>
-                                            <p className="text-lg font-medium text-gray-900 mt-2">
-                                                ₹{item.productId.price * item.quantity}
+                                            <p className="text-lg font-medium text-gray-900 mt-2 space-x-2">
+                                                ₹{calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity}
+                                                <span className="text-gray-500 line-through ml-2">₹{item.productId.price}</span>
+                                                <span className="text-green-600">{item.productId.discountPercentage}% off</span>
                                             </p>
                                             <div className="flex items-center mt-2 space-x-4">
                                                 <div className="flex items-center space-x-2">
@@ -176,7 +177,7 @@ const CartComponent = () => {
                                 </div>
                             </div>
                             <button className="w-full mt-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
-                                Proceed to Checkout
+                                <Link to={'/checkout'}>Proceed to Checkout</Link>
                             </button>
                             <div className="mt-6 space-y-4">
                                 <div className="flex items-center text-sm text-gray-500">

@@ -5,11 +5,13 @@ const filters = [
   { name: 'Sort By', icon: FaSort, options: ['Price: Low to High', 'Price: High to Low', 'New Arrivals', 'Popularity'] },
   { name: 'Category', icon: FaList, options: ['T-Shirts', 'Denim', 'Sweatshirts', 'Accessories'] },
   { name: 'Gender', icon: FaUser, options: ['Men', 'Women', 'Unisex'] },
-  { name: 'More Filters', icon: FaFilter, options: [
-    { name: 'Color', choices: ['Red', 'Blue', 'Green', 'Black', 'White'] },
-    { name: 'Size', choices: ['S', 'M', 'L', 'XL', 'XXL'] },
-    { name: 'Brand', choices: ['Nike', 'Adidas', 'Puma', 'Reebok'] }
-  ]}
+  {
+    name: 'More Filters', icon: FaFilter, options: [
+      { name: 'Color', choices: ['Red', 'Blue', 'Green', 'Black', 'White'] },
+      { name: 'Size', choices: ['S', 'M', 'L', 'XL', 'XXL'] },
+      { name: 'Brand', choices: ['Nike', 'Adidas', 'Puma', 'Reebok'] }
+    ]
+  }
 ]
 
 const products = [
@@ -51,11 +53,10 @@ function FilterModal({ filter, onSelect, selectedOption }) {
                   <button
                     key={choice}
                     onClick={() => onSelect({ [subFilter.name]: choice })}
-                    className={`px-3 py-1 rounded-full ${
-                      selectedOption && selectedOption[subFilter.name] === choice
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 hover:bg-gray-300'
-                    }`}
+                    className={`px-3 py-1 rounded-full ${selectedOption && selectedOption[subFilter.name] === choice
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 hover:bg-gray-300'
+                      }`}
                   >
                     {choice}
                   </button>

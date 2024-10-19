@@ -5,6 +5,7 @@ import { TiTickOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { checkAlreadyInCart, SliceAddToCart } from '../../store/cartSlice'
+import LoadingSpinner from '../partials/LoadingSpinner';
 
 export default function SingleProduct() {
     const [productData, setProductData] = useState(null)
@@ -13,8 +14,10 @@ export default function SingleProduct() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { id } = useParams()
+    const [loading, setLoading] = useState(true)
 
     const handleSingleProduct = async (id) => {
+        setLoading(true)
         try {
             const response = await fetch(`/api/product/${id}`, {
                 method: 'GET',
@@ -40,6 +43,8 @@ export default function SingleProduct() {
             }
         } catch (error) {
             console.error('Fetch failed:', error.message);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -58,6 +63,7 @@ export default function SingleProduct() {
     }
 
     const addToCart = async (productId, size) => {
+        setLoading(true)
         try {
             const response = await fetch(`/api/product/add-cart`, {
                 method: 'POST',
@@ -68,7 +74,6 @@ export default function SingleProduct() {
             });
 
             const data = await response.json();
-            console.log(data)
             if (response.ok) {
                 if (data.success) {
                     dispatch(SliceAddToCart({ items: data.cart.items, totalItems: data.cart.items.length }))
@@ -79,6 +84,8 @@ export default function SingleProduct() {
             }
         } catch (error) {
             console.error('Fetch failed:', error.message);
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -91,16 +98,12 @@ export default function SingleProduct() {
             addToCart(product, clickSize)
         }
     }
-
-    const handleRemoveFromCart = () => {
-
-    }
     useEffect(() => {
         handleSingleProduct(id)
     }, [])
 
     return <>
-        {productData &&
+        {loading ? <LoadingSpinner /> :
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-8xl w-full mx-auto">
                     <div className="flex flex-col lg:flex-row justify-center">
@@ -169,7 +172,7 @@ export default function SingleProduct() {
                                 <p>{message}</p>
                                 <div className="flex items-center space-x-4">
 
-                                    {!alreadyInCart ? <button className="flex-1 bg-primary hover:bg-primary-dark font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-500 text-white" onClick={() => handleAddToCart(productData, clickSize)}>
+                                    {!alreadyInCart ? <button className="flex-1 bg-primary hover:bg-primary-dark font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-500 text-white" onClick={() => handleAddToCart(productData._id, clickSize)}>
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Add to Cart
                                     </button> :
@@ -178,7 +181,7 @@ export default function SingleProduct() {
                                             Already in cart
                                         </button>}
 
-                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-blue-400">
+                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-blue-400" onClick={() => navigate('/cart')}>
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Buy now
                                     </button>

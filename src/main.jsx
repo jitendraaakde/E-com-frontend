@@ -17,6 +17,7 @@ import ContactUs from './components/majorCompo/ContactUs';
 import Home from './components/majorCompo/Home';
 import HomePage from './components/Homepage/HomePage';
 import Example from './components/example';
+import Checkout from './components/majorCompo/Checkout';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,9 @@ const router = createBrowserRouter([
       },
       {
         path: '/home', element: <HomePage />
+      },
+      {
+        path: '/checkout', element: <Checkout />
       },
       {
         path: '/login', element: <Login />
@@ -57,7 +61,8 @@ const router = createBrowserRouter([
       }, {
         path: '/example', element: <Example />
 
-      }
+      },
+
     ]
   },
 ]);

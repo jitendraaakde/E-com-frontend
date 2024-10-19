@@ -5,3 +5,24 @@
 .gradLine {
     background: linear-gradient(90.06deg, #181716 0%, #ED4E08 99.97%);
 }
+
+.loader {
+    width: 70px;
+    height: 70px;
+    border: 7px solid #e9baba;
+    border-bottom-color: #d01f57;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

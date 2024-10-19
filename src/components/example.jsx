@@ -4,21 +4,22 @@ import { initialFetch } from '../store/productSlice';
 import CounterButton from './partials/CounterButtonProps';
 import Product from './products/Product';
 import { FaFilter, FaChevronDown } from 'react-icons/fa'; // Imported icons
-import Cart from './newCart';
-import CartComponent from './secondNewCart';
+
+import LoadingSpinner from './partials/LoadingSpinner';
 
 const Example = () => {
   return (
-    <>
-      {/* <FilterBar />
-      <Products /> */}
+    <div className='mt-16'>
+      {/* <FilterBar /> */}
+      {/* <Products /> */}
       {/* E-coomerce store contains filter bar */}
       {/* <EcommerceStore /> */}
       {/* <Cart /> */}
-      <CartComponent />
+      {/* <CartComponent /> */}
+      <LoadingSpinner></LoadingSpinner>
 
 
-    </>
+    </div>
   );
 };
 
