@@ -6,6 +6,8 @@ import Product from './products/Product';
 import { FaFilter, FaChevronDown } from 'react-icons/fa'; // Imported icons
 
 import LoadingSpinner from './partials/LoadingSpinner';
+import EcommerceStore from './filterBarProducts';
+import HomePage from './Homepage/HomePage';
 
 const Example = () => {
   return (
@@ -16,8 +18,8 @@ const Example = () => {
       {/* <EcommerceStore /> */}
       {/* <Cart /> */}
       {/* <CartComponent /> */}
-      <LoadingSpinner></LoadingSpinner>
-
+      {/* <LoadingSpinner></LoadingSpinner> */}
+<HomePage/>
 
     </div>
   );

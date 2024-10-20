@@ -46,7 +46,7 @@ export default function Navbar() {
 
     return (
         <nav className="w-full border-b border-gray-200 top-0 fixed bg-white z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex-shrink-0 flex items-center">
                         <Link to="/">
