@@ -18,6 +18,8 @@ import Home from './components/majorCompo/Home';
 import HomePage from './components/Homepage/HomePage';
 import Example from './components/example';
 import Checkout from './components/majorCompo/Checkout';
+import PaymentPage from './components/majorCompo/PaymentPage';
+import OrderConfirmation from './components/majorCompo/OrderConfirmed';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +63,12 @@ const router = createBrowserRouter([
       }, {
         path: '/example', element: <Example />
 
+      },
+      {
+        path: '/payment', element: <PaymentPage />
+      },
+      {
+        path: '/order-confirmed', element: <OrderConfirmation />
       },
 
     ]

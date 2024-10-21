@@ -1,78 +1,42 @@
-'use client'
-
 import React, { useState, useEffect } from 'react'
 import { ChevronDown, SlidersHorizontal, ArrowUpDown, Grid3X3, Users } from 'lucide-react'
 
 const filters = [
-  { 
-    name: 'Sort By', 
-    icon: ArrowUpDown, 
+  {
+    name: 'Sort By',
+    icon: ArrowUpDown,
     options: [
-      'Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Best Selling', 'Customer Rating',
-      'Name: A-Z', 'Name: Z-A', 'Most Viewed', 'Most Favorited', 'Featured', 'Discount', 'Relevance',
-      'Trending', 'Limited Edition', 'Eco-Friendly', 'Handmade', 'Exclusive', 'Bestsellers',
-      'Staff Picks', 'Clearance'
+      'Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Featured', 'Discount',
     ]
   },
-  { 
-    name: 'Category', 
-    icon: Grid3X3, 
+  {
+    name: 'Category',
+    icon: Grid3X3,
     options: [
-      'T-Shirts', 'Jeans', 'Dresses', 'Jackets', 'Sweaters', 'Skirts', 'Shorts', 'Activewear',
-      'Swimwear', 'Underwear', 'Socks', 'Accessories', 'Shoes', 'Bags', 'Jewelry', 'Watches',
-      'Hats', 'Scarves', 'Gloves', 'Sunglasses'
+      'T-Shirts'
     ]
   },
-  { 
-    name: 'Gender', 
-    icon: Users, 
+  {
+    name: 'Gender',
+    icon: Users,
     options: [
-      'Women', 'Men', 'Unisex', 'Kids', 'Girls', 'Boys', 'Toddler', 'Baby', 'Maternity',
-      'Plus Size', 'Petite', 'Tall', 'Juniors', 'Seniors', 'Teens', 'Adults', 'Children',
-      'Infants', 'Family', 'Couples'
+      'Women', 'Men'
     ]
   },
-  { 
-    name: 'More Filters', 
-    icon: SlidersHorizontal, 
+  {
+    name: 'More Filters',
+    icon: SlidersHorizontal,
     options: [
-      { 
-        name: 'Color', 
+      {
+        name: 'Size',
         choices: [
-          { name: 'Black', hex: '#000000' },
-          { name: 'White', hex: '#FFFFFF' },
-          { name: 'Red', hex: '#FF0000' },
-          { name: 'Blue', hex: '#0000FF' },
-          { name: 'Green', hex: '#00FF00' },
-          { name: 'Yellow', hex: '#FFFF00' },
-          { name: 'Purple', hex: '#800080' },
-          { name: 'Pink', hex: '#FFC0CB' },
-          { name: 'Orange', hex: '#FFA500' },
-          { name: 'Brown', hex: '#A52A2A' },
-          { name: 'Gray', hex: '#808080' },
-          { name: 'Navy', hex: '#000080' },
-          { name: 'Beige', hex: '#F5F5DC' },
-          { name: 'Teal', hex: '#008080' },
-          { name: 'Maroon', hex: '#800000' },
-          { name: 'Olive', hex: '#808000' },
-          { name: 'Coral', hex: '#FF7F50' },
-          { name: 'Turquoise', hex: '#40E0D0' },
-          { name: 'Lavender', hex: '#E6E6FA' },
-          { name: 'Gold', hex: '#FFD700' }
+          'S', 'M', 'L', 'XL', 'XXL', '3XL',
         ]
       },
-      { 
-        name: 'Size', 
+      {
+        name: 'Brand',
         choices: [
-          'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL',
-          '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'
-        ]
-      },
-      { 
-        name: 'Brand', 
-        choices: [
-          'Nike', 'Adidas', 'Zara', 'H&M', 'Gucci', 'Levi\'s', 'Calvin Klein', 'Tommy Hilfiger', 'Ralph Lauren', 'Puma',
-          'Under Armour', 'New Balance', 'Converse', 'Vans', 'The North Face', 'Uniqlo', 'Gap', 'Lacoste', 'Reebok', 'Fila'
+          'Nike',
         ]
       }
     ]
@@ -86,7 +50,7 @@ function FilterDropdown({ filter, onSelect, selectedOption, openFilter, setOpenF
     <div className="relative">
       <button
         onClick={() => setOpenFilter(isOpen ? null : filter.name)}
-        className={`flex items-center gap-2 px-4 py-2 bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${selectedOption ? 'ring-2 ring-indigo-500' : ''}`}
+        className={`flex items-center gap-2 px-4 py-2 bg-slate-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-indigo-500 ${selectedOption ? 'ring-1 ring-indigo-300' : ''}`}
       >
         <filter.icon className="h-4 w-4" />
         {filter.name}
@@ -122,7 +86,8 @@ function MoreFiltersLarge({ filter, onSelect, selectedFilters, openFilter, setOp
     <div className="relative">
       <button
         onClick={() => setOpenFilter(isOpen ? null : filter.name)}
-        className={`flex items-center gap-2 px-4 py-2 bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${Object.keys(selectedFilters).length > 0 ? 'ring-2 ring-indigo-500' : ''}`}
+        className={`flex items-center gap-2 px-4 bg-slate-200 py-2 
+           text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none  focus:ring-offset-2 ${Object.keys(selectedFilters).length > 0 ? 'ring-1 ring-indigo-300' : ''}`}
       >
         <filter.icon className="h-4 w-4" />
         {filter.name}
@@ -239,19 +204,37 @@ export default function Component() {
     sendAllFiltersToBackend({ ...selectedFilters, [filterName]: option })
   }
 
-  const sendAllFiltersToBackend = (filters) => {
-    console.log('Sending all filters to backend:', filters)
+  const sendAllFiltersToBackend = async (filters) => {
+    try {
+      const response = await fetch(`/api/product/filters`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(filters)
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('data', data)
+        // dispatch(initialFetch(data.products));
+      } else {
+        throw new Error(data.message || 'Error fetching products');
+      }
+    } catch (error) {
+      console.error('Fetch failed:', error.message);
+    }
   }
 
   return (
-    <div className="w-full bg-gradient-to-r from-purple-500 to-pink-500 p-4 shadow-lg">
+    <div className="w-full p-2 shadow-md fixed bg-white z-40">
       <div className="container mx-auto">
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap gap-2">
           {filters.map((filter) => (
             filter.name !== 'More Filters' ? (
-              <FilterDropdown 
-                key={filter.name} 
-                filter={filter} 
+              <FilterDropdown
+                key={filter.name}
+                filter={filter}
                 onSelect={handleFilterSelect}
                 selectedOption={selectedFilters[filter.name]}
                 openFilter={openFilter}
@@ -259,18 +242,18 @@ export default function Component() {
               />
             ) : (
               isLargeScreen ? (
-                <MoreFiltersLarge 
-                  key={filter.name} 
-                  filter={filter} 
+                <MoreFiltersLarge
+                  key={filter.name}
+                  filter={filter}
                   onSelect={handleFilterSelect}
                   selectedFilters={selectedFilters}
                   openFilter={openFilter}
                   setOpenFilter={setOpenFilter}
                 />
               ) : (
-                <MoreFiltersSmall 
-                  key={filter.name} 
-                  filter={filter} 
+                <MoreFiltersSmall
+                  key={filter.name}
+                  filter={filter}
                   onSelect={handleFilterSelect}
                   selectedFilters={selectedFilters}
                   openFilter={openFilter}

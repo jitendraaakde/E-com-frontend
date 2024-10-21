@@ -8,8 +8,8 @@ const Home = () => {
     return <>
         <GradLine></GradLine>
         <FilePath></FilePath>
-        <Filters/>
-        {/* <FilterBar></FilterBar> */}
+        {/* <Filters /> */}
+        <FilterBar></FilterBar>
         <Products></Products>
     </>
 }

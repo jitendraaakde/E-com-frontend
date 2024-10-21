@@ -1,15 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
 import GAuth from "../partials/GAuth";
 import { useState } from "react";
+import { MdMarkEmailRead } from "react-icons/md";
+
 
 
 const Profile = () => {
-    const navigate = useNavigate()
-    const [message, setMessage] = useState('Please Enter details')
+    const navigate = useNavigate();
+    const [message, setMessage] = useState('Please enter your details');
+    const [isSignup, setIsSignup] = useState(true);
+    const [userEmail, setUserEmail] = useState('');
+
     const handleSignup = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
+        console.log('formEntries of Signup', formEntries)
+
         try {
             const response = await fetch('/api/users/signup', {
                 method: 'POST',
@@ -18,18 +25,58 @@ const Profile = () => {
                 },
                 body: JSON.stringify(formEntries),
             });
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            const data = await response.json();
-            if (data.success) {
-                navigate('/login')
-            }
 
+            const data = await response.json();
+            console.log('response of OTP', data)
+
+            if (!response.ok) {
+                setMessage(data.message || 'Signup failed');
+                return;
+            }
+            if (data.success) {
+                setMessage('OTP sent to your email. Please enter the OTP.');
+                setUserEmail(formEntries.email);
+                setIsSignup(false);
+            }
         } catch (error) {
             console.error('Signup failed:', error.message);
+            setMessage('Error: Signup failed. Please try again.');
         }
     };
+
+    const handleOtp = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formEntries = Object.fromEntries(formData.entries());
+        formEntries.email = userEmail;
+        console.log('formEntires of OTP', formEntries)
+
+        try {
+            const response = await fetch('/api/users/otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formEntries),
+            });
+
+            const data = await response.json();
+            console.log('Response of OTP:', data);
+            if (!response.ok) {
+                setMessage(data.message || 'OTP verification failed.');
+                return;
+            }
+
+            if (data.success) {
+                dispatch(loginUser(data.user));
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error('OTP verification failed:', error.message);
+            setMessage('Error: OTP verification failed. Please try again.');
+        }
+    };
+
 
     return (
         <section className="bg-white">
@@ -42,9 +89,8 @@ const Profile = () => {
                         Already have an account? <Link to="/login" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</Link>
                     </p>
                     <p>{message}</p>
-                    <form className="mt-8" onSubmit={handleSignup}>
+                    {isSignup ? <form className="mt-8" onSubmit={handleSignup}>
                         <div className="space-y-3">
-                            {/* Name field */}
                             <div>
                                 <label htmlFor="name" className="text-base font-medium text-gray-900">First & Last name</label>
                                 <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
@@ -111,7 +157,33 @@ const Profile = () => {
 
                             </div>
                         </div>
-                    </form>
+                    </form> : <form className="mt-8" onSubmit={handleOtp}>
+                        <div className="space-y-3">
+                            <div>
+                                <label htmlFor="otp" className="text-base font-medium text-gray-900">Please Enter OTP</label>
+                                <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <MdMarkEmailRead className="w-5 h-5" />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        name="otp"
+                                        id="otp"
+                                        placeholder="Enter your OTP"
+                                        className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <button
+                                    type="submit"
+                                    className="inline-flex items-center justify-center w-full px-4 py-3 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>}
                 </div>
             </div>
         </section>

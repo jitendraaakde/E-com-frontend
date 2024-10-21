@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
 import { CreditCard, Smartphone, Building, Wallet, Lock, ChevronDown, ChevronUp, Edit2, Plus, Check, Clock, Phone } from 'lucide-react'
 
 const products = [
@@ -30,7 +29,7 @@ export default function PaymentPage() {
         {products.map((product) => (
           <div key={product.id} className="flex items-center space-x-4 bg-white p-3 rounded-md shadow-sm transition-all duration-300 hover:shadow-md">
             <div className="relative w-16 h-16 overflow-hidden rounded-md">
-              <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" className="transition-transform duration-300 hover:scale-110" />
+              <img src={product.image} alt={product.name} layout="fill" objectFit="cover" className="transition-transform duration-300 hover:scale-110" />
             </div>
             <div className="flex-1">
               <h3 className="font-medium text-purple-700">{product.name}</h3>
