@@ -24,23 +24,37 @@ const filters = [
     ]
   },
   {
-    name: 'More Filters',
-    icon: SlidersHorizontal,
+    name: 'Size',
+    icon: Users,
     options: [
-      {
-        name: 'Size',
-        choices: [
-          'S', 'M', 'L', 'XL', 'XXL', '3XL',
-        ]
-      },
-      {
-        name: 'Brand',
-        choices: [
-          'Nike',
-        ]
-      }
+      'S', 'M', 'L', 'XL', 'XXL', '3XL',
     ]
-  }
+  },
+  {
+    name: 'Brand',
+    icon: Users,
+    options: [
+      'Nike',
+    ]
+  },
+  // {
+  //   name: 'More Filters',
+  //   icon: SlidersHorizontal,
+  //   options: [
+  //     {
+  //       name: 'Size',
+  //       choices: [
+  //         'S', 'M', 'L', 'XL', 'XXL', '3XL',
+  //       ]
+  //     },
+  //     {
+  //       name: 'Brand',
+  //       choices: [
+  //         'Nike',
+  //       ]
+  //     }
+  //   ]
+  // }
 ]
 
 function FilterDropdown({ filter, onSelect, selectedOption, openFilter, setOpenFilter }) {
@@ -205,6 +219,7 @@ export default function Component() {
   }
 
   const sendAllFiltersToBackend = async (filters) => {
+    console.log(filters)
     try {
       const response = await fetch(`/api/product/filters`, {
         method: 'POST',
@@ -231,36 +246,36 @@ export default function Component() {
       <div className="container mx-auto">
         <div className="flex flex-wrap gap-2">
           {filters.map((filter) => (
-            filter.name !== 'More Filters' ? (
-              <FilterDropdown
-                key={filter.name}
-                filter={filter}
-                onSelect={handleFilterSelect}
-                selectedOption={selectedFilters[filter.name]}
-                openFilter={openFilter}
-                setOpenFilter={setOpenFilter}
-              />
-            ) : (
-              isLargeScreen ? (
-                <MoreFiltersLarge
-                  key={filter.name}
-                  filter={filter}
-                  onSelect={handleFilterSelect}
-                  selectedFilters={selectedFilters}
-                  openFilter={openFilter}
-                  setOpenFilter={setOpenFilter}
-                />
-              ) : (
-                <MoreFiltersSmall
-                  key={filter.name}
-                  filter={filter}
-                  onSelect={handleFilterSelect}
-                  selectedFilters={selectedFilters}
-                  openFilter={openFilter}
-                  setOpenFilter={setOpenFilter}
-                />
-              )
-            )
+            // filter.name !== 'More Filters' ? (
+            <FilterDropdown
+              key={filter.name}
+              filter={filter}
+              onSelect={handleFilterSelect}
+              selectedOption={selectedFilters[filter.name]}
+              openFilter={openFilter}
+              setOpenFilter={setOpenFilter}
+            />
+            // ) : (
+            //   isLargeScreen ? (
+            //     <MoreFiltersLarge
+            //       key={filter.name}
+            //       filter={filter}
+            //       onSelect={handleFilterSelect}
+            //       selectedFilters={selectedFilters}
+            //       openFilter={openFilter}
+            //       setOpenFilter={setOpenFilter}
+            //     />
+            //   ) : (
+            //     <MoreFiltersSmall
+            //       key={filter.name}
+            //       filter={filter}
+            //       onSelect={handleFilterSelect}
+            //       selectedFilters={selectedFilters}
+            //       openFilter={openFilter}
+            //       setOpenFilter={setOpenFilter}
+            //     />
+            //   )
+            // )
           ))}
         </div>
       </div>

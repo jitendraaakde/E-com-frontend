@@ -6,10 +6,10 @@ import Products from "../products/Products"
 
 const Home = () => {
     return <>
-        <GradLine></GradLine>
-        <FilePath></FilePath>
-        {/* <Filters /> */}
-        <FilterBar></FilterBar>
+        {/* <GradLine></GradLine> */}
+        {/* <FilePath></FilePath> */}
+        <Filters />
+        {/* <FilterBar></FilterBar> */}
         <Products></Products>
     </>
 }

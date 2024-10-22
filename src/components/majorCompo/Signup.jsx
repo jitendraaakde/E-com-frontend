@@ -2,11 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import GAuth from "../partials/GAuth";
 import { useState } from "react";
 import { MdMarkEmailRead } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../store/userSlice";
 
 
 
 const Profile = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const [message, setMessage] = useState('Please enter your details');
     const [isSignup, setIsSignup] = useState(true);
     const [userEmail, setUserEmail] = useState('');
@@ -69,7 +72,7 @@ const Profile = () => {
 
             if (data.success) {
                 dispatch(loginUser(data.user));
-                navigate('/login');
+                navigate('/');
             }
         } catch (error) {
             console.error('OTP verification failed:', error.message);
@@ -127,8 +130,6 @@ const Profile = () => {
                                     />
                                 </div>
                             </div>
-
-                            {/* Password field */}
                             <div>
                                 <label htmlFor="password" className="text-base font-medium text-gray-900">Password</label>
                                 <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
