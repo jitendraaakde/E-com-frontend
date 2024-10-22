@@ -3,11 +3,10 @@ import { loginUser } from "../../store/userSlice";
 import { Link } from "react-router-dom";
 import GAuth from "../partials/GAuth";
 import { useState } from "react";
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const dispatch = useDispatch();
-    const [message, setMessage] = useState('')
-
     const handleLogin = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -27,7 +26,7 @@ const Login = () => {
             if (!response.ok) {
                 throw new Error(data.message || `Error: ${response.statusText}`);
             }
-            setMessage(data.message)
+            toast.success(data.message)
             dispatch(loginUser(data.user));
         } catch (error) {
             console.error('Login failed:', error.message);
@@ -41,11 +40,10 @@ const Login = () => {
 
             <div className="flex items-center justify-center px-4 py-6 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-10">
                 <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto space-y-3">
-                    <h2 className="text-xl font-bold leading-tight text-black sm:text-2xl">Login to Celebration</h2>
+                    <h2 className="text-xl font-bold leading-tight text-black sm:text-2xl">Login</h2>
                     <p className="mt-2 text-base text-gray-600">
                         Don't have an account? <Link to="/register" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Signup</Link>
                     </p>
-                    <p>{message}</p>
                     <form className="mt-8 space-y-5" onSubmit={handleLogin}>
                         <div className="space-y-2">
                             <label htmlFor="email" className="text-base font-medium text-gray-900">Email address</label>

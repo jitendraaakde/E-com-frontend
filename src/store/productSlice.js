@@ -4,13 +4,17 @@ const productSlice = createSlice({
     name: 'products',
     initialState: {
         productList: [],
+        filters: {}
     },
     reducers: {
         initialFetch: (state, action) => {
             state.productList = action.payload;
         },
+        getFilterProducts: (state, action) => {
+            state.filters = action.payload
+        }
     },
 });
 
-export const { initialFetch } = productSlice.actions;
+export const { initialFetch, getFilterProducts } = productSlice.actions;
 export default productSlice.reducer;

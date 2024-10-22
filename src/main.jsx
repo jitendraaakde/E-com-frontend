@@ -20,6 +20,9 @@ import Example from './components/example';
 import Checkout from './components/majorCompo/Checkout';
 import PaymentPage from './components/majorCompo/PaymentPage';
 import OrderConfirmation from './components/majorCompo/OrderConfirmed';
+// import { Toaster } from 'sonner'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const router = createBrowserRouter([
   {
@@ -81,6 +84,8 @@ createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <RouterProvider router={router} />
+        {/* <Toaster position="top-right" richColors /> */}
+        <ToastContainer />
       </PersistGate>
     </Provider>
   </StrictMode>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { checkAlreadyInCart, SliceAddToCart } from '../../store/cartSlice'
 import LoadingSpinner from '../partials/LoadingSpinner';
+import { toast } from 'react-toastify';
 
 export default function SingleProduct() {
     const [productData, setProductData] = useState(null)
@@ -56,14 +57,12 @@ export default function SingleProduct() {
         setHoverImage(url)
     }
     const [clickSize, setClickSize] = useState(null)
-    const [message, setMessage] = useState('')
 
     const handleSizeButton = (sizeObj) => {
         setClickSize(sizeObj)
     }
 
     const addToCart = async (productId, size) => {
-        setLoading(true)
         try {
             const response = await fetch(`/api/product/add-cart`, {
                 method: 'POST',
@@ -77,7 +76,7 @@ export default function SingleProduct() {
             if (response.ok) {
                 if (data.success) {
                     dispatch(SliceAddToCart({ items: data.cart.items, totalItems: data.cart.items.length }))
-                    setMessage('Product Added to cart ')
+                    toast.success('Product Added to cart ')
                 }
             } else {
                 throw new Error(data.message || 'Error fetching products');
@@ -91,10 +90,9 @@ export default function SingleProduct() {
 
     const handleAddToCart = (product, clickSize) => {
         if (!clickSize) {
-            setMessage('Please choose size before Add to Cart')
+            toast('Please choose size before Add to Cart')
             return
         } else {
-            setMessage('')
             addToCart(product, clickSize)
         }
     }
@@ -169,7 +167,7 @@ export default function SingleProduct() {
                             </div>
 
                             <div className="space-y-4 mt-4">
-                                <p>{message}</p>
+                                {/* <p>{message}</p> */}
                                 <div className="flex items-center space-x-4">
 
                                     {!alreadyInCart ? <button className="flex-1 bg-primary hover:bg-primary-dark font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-red-500 text-white" onClick={() => handleAddToCart(productData._id, clickSize)}>

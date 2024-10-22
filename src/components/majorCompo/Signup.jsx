@@ -4,13 +4,11 @@ import { useState } from "react";
 import { MdMarkEmailRead } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../store/userSlice";
-
-
-
+// import { toast } from 'sonner'
+import { toast } from 'react-toastify';
 const Profile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const [message, setMessage] = useState('Please enter your details');
     const [isSignup, setIsSignup] = useState(true);
     const [userEmail, setUserEmail] = useState('');
 
@@ -33,11 +31,11 @@ const Profile = () => {
             console.log('response of OTP', data)
 
             if (!response.ok) {
-                setMessage(data.message || 'Signup failed');
+                toast.error(data.message || 'Signup failed');
                 return;
             }
             if (data.success) {
-                setMessage('OTP sent to your email. Please enter the OTP.');
+                toast.success('OTP sent to your email. Please enter the OTP.');
                 setUserEmail(formEntries.email);
                 setIsSignup(false);
             }
@@ -66,7 +64,7 @@ const Profile = () => {
             const data = await response.json();
             console.log('Response of OTP:', data);
             if (!response.ok) {
-                setMessage(data.message || 'OTP verification failed.');
+                toast.error(data.message)
                 return;
             }
 
@@ -76,7 +74,6 @@ const Profile = () => {
             }
         } catch (error) {
             console.error('OTP verification failed:', error.message);
-            setMessage('Error: OTP verification failed. Please try again.');
         }
     };
 
@@ -87,12 +84,11 @@ const Profile = () => {
 
             <div className="flex items-center justify-center px-4 py-6 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-10">
                 <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
-                    <h2 className="text-xl font-bold leading-tight text-black sm:text-2xl">Sign up to Celebration</h2>
+                    <h2 className="text-xl font-bold leading-tight text-black sm:text-2xl">Sign up</h2>
                     <p className="mt-2 text-base text-gray-600">
                         Already have an account? <Link to="/login" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</Link>
                     </p>
-                    <p>{message}</p>
-                    {isSignup ? <form className="mt-8" onSubmit={handleSignup}>
+                    {isSignup ? <form className="mt-4" onSubmit={handleSignup}>
                         <div className="space-y-3">
                             <div>
                                 <label htmlFor="name" className="text-base font-medium text-gray-900">First & Last name</label>
@@ -104,6 +100,7 @@ const Profile = () => {
                                     </div>
                                     <input
                                         type="text"
+                                        required
                                         name="name"
                                         id="name"
                                         placeholder="Enter your full name"
@@ -125,6 +122,7 @@ const Profile = () => {
                                         type="email"
                                         name="email"
                                         id="email"
+                                        required
                                         placeholder="Enter email to get started"
                                         className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                     />
@@ -141,6 +139,7 @@ const Profile = () => {
                                     <input
                                         type="password"
                                         name="passwordHash"
+                                        required
                                         id="password"
                                         placeholder="Enter your password"
                                         className="block w-full py-3 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"

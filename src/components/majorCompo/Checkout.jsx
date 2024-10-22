@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Trash2, Edit, ShoppingBag } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const initialAddresses = [
   { id: 1, name: 'John Doe', street: '123 Main St', city: 'New York', state: 'NY', zip: '10001', phone: '123-456-7890' },
@@ -13,8 +14,13 @@ const initialProducts = [
 ];
 
 export default function Checkout() {
+
+  const cart = useSelector(state => state.cart)
+  console.log('cart.items', cart.items)
   const [addresses, setAddresses] = useState(initialAddresses);
-  const [products] = useState(initialProducts);
+  const products = cart.items
+
+  console.log(cart.items)
   const [selectedAddress, setSelectedAddress] = useState(addresses[0].id);
   const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -45,15 +51,13 @@ export default function Checkout() {
       setSelectedAddress(addresses[0]?.id);
     }
   };
-
+  console.log(products)
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-4 md:p-8 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center text-indigo-800">Checkout</h1>
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left side - Addresses */}
           <div className="w-full lg:w-1/2">
-            <h2 className="text-2xl font-bold mb-4 text-indigo-600">Delivery Address</h2>
+            <h2 className="text-2xl font-bold mb-4 text-slate-800">Delivery Address</h2>
             <div className="bg-white rounded-lg p-6 shadow-md">
               {addresses.map((address) => (
                 <div key={address.id} className="flex items-center justify-between mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50">
@@ -86,17 +90,16 @@ export default function Checkout() {
             </button>
           </div>
 
-          {/* Right side - Products and Summary */}
           <div className="w-full lg:w-1/2">
-            <h2 className="text-2xl font-bold mb-4 text-indigo-600">Order Summary</h2>
+            <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>
             <div className="bg-white rounded-lg p-6 shadow-md">
               <div className="max-h-64 overflow-y-auto mb-4">
                 {products.map((product) => (
-                  <div key={product.id} className="flex items-center mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50">
-                    <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded-md mr-4" />
+                  <div key={product.productId._id} className="flex items-center mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50">
+                    <img src={product.productId.images[0].url} className="w-20 h-28 object-cover rounded-md mr-4" />
                     <div>
-                      <h3 className="font-bold text-indigo-800">{product.name}</h3>
-                      <p className="text-indigo-600">${product.price.toFixed(2)}</p>
+                      <h3 className="font-bold text-indigo-800">{product.productId.name}</h3>
+                      <p className="text-indigo-600">${product.productId.price.toFixed(2)}</p>
                     </div>
                   </div>
                 ))}

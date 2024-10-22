@@ -1,70 +1,54 @@
-import React, { useState, useEffect } from 'react'
-import { ChevronDown, SlidersHorizontal, ArrowUpDown, Grid3X3, Users } from 'lucide-react'
+import React, { useState, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { TbCategory2 } from "react-icons/tb";
+import { BsPersonCircle } from "react-icons/bs";
+import { RxSize } from "react-icons/rx";
+import { TbArrowsUpDown } from "react-icons/tb";
+import { MdOutlineBrandingWatermark } from "react-icons/md";
+import { useDispatch } from 'react-redux';
+import { getFilterProducts } from '../store/productSlice';
 
-const filters = [
+const initialFilters = [
   {
     name: 'Sort By',
-    icon: ArrowUpDown,
+    icon: TbArrowsUpDown,
     options: [
       'Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Featured', 'Discount',
     ]
   },
   {
-    name: 'Category',
-    icon: Grid3X3,
+    name: 'Gender',
+    icon: BsPersonCircle,
     options: [
-      'T-Shirts'
+      'Women', 'Men', 'Kids'
     ]
   },
   {
-    name: 'Gender',
-    icon: Users,
-    options: [
-      'Women', 'Men'
-    ]
+    name: 'Category',
+    icon: TbCategory2,
+    options: [],
   },
   {
     name: 'Size',
-    icon: Users,
-    options: [
-      'S', 'M', 'L', 'XL', 'XXL', '3XL',
-    ]
+    icon: RxSize,
+    options: [],
   },
   {
     name: 'Brand',
-    icon: Users,
-    options: [
-      'Nike',
-    ]
+    icon: MdOutlineBrandingWatermark,
+    options: [],
   },
-  // {
-  //   name: 'More Filters',
-  //   icon: SlidersHorizontal,
-  //   options: [
-  //     {
-  //       name: 'Size',
-  //       choices: [
-  //         'S', 'M', 'L', 'XL', 'XXL', '3XL',
-  //       ]
-  //     },
-  //     {
-  //       name: 'Brand',
-  //       choices: [
-  //         'Nike',
-  //       ]
-  //     }
-  //   ]
-  // }
-]
+];
 
 function FilterDropdown({ filter, onSelect, selectedOption, openFilter, setOpenFilter }) {
-  const isOpen = openFilter === filter.name
-
+  const isOpen = openFilter === filter.name;
   return (
     <div className="relative">
       <button
         onClick={() => setOpenFilter(isOpen ? null : filter.name)}
-        className={`flex items-center gap-2 px-4 py-2 bg-slate-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-indigo-500 ${selectedOption ? 'ring-1 ring-indigo-300' : ''}`}
+        className={`flex items-center gap-2 px-4 py-1 text-black shadow-sm
+            focus:outline-none focus:ring-offset-2
+             ${selectedOption ? 'ring-1 ring-indigo-300' : ''}`}
       >
         <filter.icon className="h-4 w-4" />
         {filter.name}
@@ -78,8 +62,8 @@ function FilterDropdown({ filter, onSelect, selectedOption, openFilter, setOpenF
                 key={option}
                 className={`block w-full text-left px-4 py-2 text-sm ${option === selectedOption ? 'bg-gray-800 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
                 onClick={() => {
-                  onSelect(filter.name, option)
-                  setOpenFilter(null)
+                  onSelect(filter.name, option);
+                  setOpenFilter(null);
                 }}
               >
                 {option}
@@ -89,196 +73,96 @@ function FilterDropdown({ filter, onSelect, selectedOption, openFilter, setOpenF
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function MoreFiltersLarge({ filter, onSelect, selectedFilters, openFilter, setOpenFilter }) {
-  const isOpen = openFilter === filter.name
-  const [openAccordion, setOpenAccordion] = useState(null)
+export default function Filters() {
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [openFilter, setOpenFilter] = useState(null);
+  const [filters, setFilters] = useState(initialFilters);
+  const dispatch = useDispatch();
 
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setOpenFilter(isOpen ? null : filter.name)}
-        className={`flex items-center gap-2 px-4 bg-slate-200 py-2 
-           text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none  focus:ring-offset-2 ${Object.keys(selectedFilters).length > 0 ? 'ring-1 ring-indigo-300' : ''}`}
-      >
-        <filter.icon className="h-4 w-4" />
-        {filter.name}
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      {isOpen && (
-        <div className="absolute z-10 mt-2 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-          <div className="py-1 max-h-96 overflow-auto">
-            {filter.options.map((subFilter) => (
-              <div key={subFilter.name} className="px-4 py-2">
-                <button
-                  className="flex justify-between items-center w-full text-left text-sm font-medium text-gray-700 hover:text-gray-900"
-                  onClick={() => setOpenAccordion(openAccordion === subFilter.name ? null : subFilter.name)}
-                >
-                  {subFilter.name}
-                  <ChevronDown className={`h-4 w-4 transform transition-transform ${openAccordion === subFilter.name ? 'rotate-180' : ''}`} />
-                </button>
-                {openAccordion === subFilter.name && (
-                  <div className="mt-2 grid grid-cols-2 gap-2">
-                    {subFilter.choices.map((choice) => (
-                      <button
-                        key={typeof choice === 'string' ? choice : choice.name}
-                        className={`flex items-center justify-start px-2 py-1 text-sm rounded-md ${selectedFilters[subFilter.name] === (typeof choice === 'string' ? choice : choice.name) ? 'bg-gray-800 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
-                        onClick={() => onSelect(subFilter.name, typeof choice === 'string' ? choice : choice.name)}
-                      >
-                        {subFilter.name === 'Color' && (
-                          <div
-                            className="w-4 h-4 rounded-full mr-2"
-                            style={{ backgroundColor: choice.hex }}
-                          />
-                        )}
-                        {typeof choice === 'string' ? choice : choice.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function MoreFiltersSmall({ filter, onSelect, selectedFilters, openFilter, setOpenFilter }) {
-  const isOpen = openFilter === filter.name
-
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setOpenFilter(isOpen ? null : filter.name)}
-        className={`flex items-center gap-2 px-4 py-2 bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${Object.keys(selectedFilters).length > 0 ? 'ring-2 ring-indigo-500' : ''}`}
-      >
-        <filter.icon className="h-4 w-4" />
-        {filter.name}
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      {isOpen && (
-        <div className="absolute z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-          <div className="py-1 max-h-60 overflow-auto">
-            {filter.options.map((subFilter) => (
-              <div key={subFilter.name}>
-                <div className="px-4 py-2 text-sm font-medium text-gray-700">{subFilter.name}</div>
-                {subFilter.choices.map((choice) => (
-                  <button
-                    key={typeof choice === 'string' ? choice : choice.name}
-                    className={`block w-full text-left px-4 py-2 text-sm ${selectedFilters[subFilter.name] === (typeof choice === 'string' ? choice : choice.name) ? 'bg-gray-800 text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
-                    onClick={() => {
-                      onSelect(subFilter.name, typeof choice === 'string' ? choice : choice.name)
-                      setOpenFilter(null)
-                    }}
-                  >
-                    {subFilter.name === 'Color' && (
-                      <div
-                        className="w-4 h-4 rounded-full mr-2 inline-block"
-                        style={{ backgroundColor: choice.hex }}
-                      />
-                    )}
-                    {typeof choice === 'string' ? choice : choice.name}
-                  </button>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default function Component() {
-  const [selectedFilters, setSelectedFilters] = useState({})
-  const [isLargeScreen, setIsLargeScreen] = useState(false)
-  const [openFilter, setOpenFilter] = useState(null)
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024)
-    }
-
-    checkScreenSize()
-    window.addEventListener('resize', checkScreenSize)
-
-    return () => window.removeEventListener('resize', checkScreenSize)
-  }, [])
-
-  const handleFilterSelect = (filterName, option) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [filterName]: option
-    }))
-
-    sendAllFiltersToBackend({ ...selectedFilters, [filterName]: option })
-  }
-
-  const sendAllFiltersToBackend = async (filters) => {
-    console.log(filters)
+  const getInitialFiltersData = async () => {
     try {
-      const response = await fetch(`/api/product/filters`, {
-        method: 'POST',
+      const response = await fetch(`/api/product/category-brand-size`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(filters)
+        }
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log('data', data)
-        // dispatch(initialFetch(data.products));
+        setFilters((prevFilters) => {
+          return prevFilters.map(filter => {
+            if (filter.name === 'Category') {
+              return { ...filter, options: data.categories.map(cat => cat.name) };
+            }
+            if (filter.name === 'Size') {
+              return { ...filter, options: data.sizes.map(size => size.size) };
+            }
+            if (filter.name === 'Brand') {
+              return { ...filter, options: data.brands.map(brand => brand.name) };
+            }
+            return filter;
+          });
+        });
       } else {
         throw new Error(data.message || 'Error fetching products');
       }
     } catch (error) {
       console.error('Fetch failed:', error.message);
     }
-  }
+  };
+
+  useEffect(() => {
+    getInitialFiltersData();
+  }, []);
+
+  const handleFilterSelect = (filterName, option) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      [filterName]: option
+    }));
+    sendAllFiltersToBackend({ ...selectedFilters, [filterName]: option });
+  };
+
+  const sendAllFiltersToBackend = async (filters) => {
+    dispatch(getFilterProducts(filters));
+  };
 
   return (
     <div className="w-full p-2 shadow-md fixed bg-white z-40">
       <div className="container mx-auto">
-        <div className="flex flex-wrap gap-2">
-          {filters.map((filter) => (
-            // filter.name !== 'More Filters' ? (
-            <FilterDropdown
-              key={filter.name}
-              filter={filter}
-              onSelect={handleFilterSelect}
-              selectedOption={selectedFilters[filter.name]}
-              openFilter={openFilter}
-              setOpenFilter={setOpenFilter}
-            />
-            // ) : (
-            //   isLargeScreen ? (
-            //     <MoreFiltersLarge
-            //       key={filter.name}
-            //       filter={filter}
-            //       onSelect={handleFilterSelect}
-            //       selectedFilters={selectedFilters}
-            //       openFilter={openFilter}
-            //       setOpenFilter={setOpenFilter}
-            //     />
-            //   ) : (
-            //     <MoreFiltersSmall
-            //       key={filter.name}
-            //       filter={filter}
-            //       onSelect={handleFilterSelect}
-            //       selectedFilters={selectedFilters}
-            //       openFilter={openFilter}
-            //       setOpenFilter={setOpenFilter}
-            //     />
-            //   )
-            // )
-          ))}
+        <div className="flex flex-wrap items-center gap-2 justify-between">
+          <div className="flex flex-wrap gap-2">
+            {filters
+              .filter((filter) => filter.name !== 'Sort By')
+              .map((filter) => (
+                <FilterDropdown
+                  key={filter.name}
+                  filter={filter}
+                  onSelect={handleFilterSelect}
+                  selectedOption={selectedFilters[filter.name]}
+                  openFilter={openFilter}
+                  setOpenFilter={setOpenFilter}
+                />
+              ))}
+          </div>
+          {filters.some((filter) => filter.name === 'Sort By') && (
+            <div>
+              <FilterDropdown
+                key="Sort By"
+                filter={filters.find((f) => f.name === 'Sort By')}
+                onSelect={handleFilterSelect}
+                selectedOption={selectedFilters['Sort By']}
+                openFilter={openFilter}
+                setOpenFilter={setOpenFilter}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 }

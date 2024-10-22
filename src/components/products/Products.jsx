@@ -12,19 +12,21 @@ export default function Products() {
   const dispatch = useDispatch();
   const productsObj = useSelector((state) => state.products);
   const products = productsObj?.productList || [];
+  let filterObj = productsObj.filters;
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
         const response = await fetch(`/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-          },
+          }, body: JSON.stringify(filterObj)
         });
 
         const data = await response.json();
+        console.log('filterd data from backend', data)
         if (response.ok) {
           dispatch(initialFetch(data.products));
         } else {
@@ -38,7 +40,7 @@ export default function Products() {
     };
 
     fetchProducts();
-  }, [page, dispatch]);
+  }, [page, dispatch, filterObj]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);

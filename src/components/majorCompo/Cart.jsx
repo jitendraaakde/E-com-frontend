@@ -4,6 +4,7 @@ import { FaTruck, FaCreditCard } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux'
 import { SliceAddToCart } from "../../store/cartSlice";
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify";
 
 const CartComponent = () => {
     const dispatch = useDispatch()
@@ -11,7 +12,6 @@ const CartComponent = () => {
     const cart = useSelector(state => state.cart)
     let items = cart.items
     const removeItem = async (id) => {
-        console.log('remove item id', id)
         try {
             const response = await fetch(`/api/product/remove-cart-item/${id}`, {
                 method: 'DELETE',
@@ -24,7 +24,7 @@ const CartComponent = () => {
 
             if (response.ok) {
                 if (data.cart) {
-                    console.log('Deleted item and remaining items:', data.cart);
+                    toast.success('Product remove from cart')
                     dispatch(SliceAddToCart({ items: data.cart, totalItems: data.cart.length }));
                 } else {
                     throw new Error('Cart data not found in response');
@@ -77,7 +77,7 @@ const CartComponent = () => {
     return (
         <div className="min-h-screen bg-gray-100 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Shopping Cart</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">{items.length !== 0 ? 'Your Shopping Cart' : "Your Cart is Empty"}</h1>
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="lg:w-2/3">
                         <div className="h-[calc(100vh-200px)] pr-4 overflow-y-auto">
