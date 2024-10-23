@@ -69,6 +69,7 @@ const Profile = () => {
             }
 
             if (data.success) {
+                toast.success('Signup Successull')
                 dispatch(loginUser(data.user));
                 navigate('/');
             }

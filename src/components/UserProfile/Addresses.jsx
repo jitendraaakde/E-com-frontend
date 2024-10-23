@@ -26,6 +26,7 @@ const Addresses = () => {
     }
 
     const addAddresses = async (formEntries) => {
+        console.log('Form entries from user addresses', formEntries)
         try {
             const response = await fetch('/api/users/add-addresses', {
                 method: 'POST',

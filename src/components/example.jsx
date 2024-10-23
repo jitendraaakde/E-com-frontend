@@ -19,7 +19,7 @@ const Example = () => {
       {/* <Cart /> */}
       {/* <CartComponent /> */}
       {/* <LoadingSpinner></LoadingSpinner> */}
-<HomePage/>
+      <HomePage />
 
     </div>
   );
