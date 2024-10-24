@@ -5,18 +5,20 @@ import userReducer from './userSlice';
 import adminReducer from './adminSlice';
 import productReducer from './productSlice';
 import cartReducers from './cartSlice';
+import orderReducers from './orderSlice'
 
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['products', 'cart'],
+    blacklist: ['products', 'cart', 'orders'],
 };
 
 const rootReducer = combineReducers({
     user: userReducer,
     admin: adminReducer,
     products: productReducer,
-    cart: cartReducers
+    cart: cartReducers,
+    orders: orderReducers
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

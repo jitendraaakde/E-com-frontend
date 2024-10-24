@@ -1,17 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const adminSlice = createSlice({
+const orderSlice = createSlice({
     name: 'orders',
     initialState: {
         shippingAdd: {},
-        orderProduct: {}
+        orderProduct: {},
+        ordersData: {}
     },
     reducers: {
         initialOrder: (state, action) => {
 
         },
+        addShippingAddress: (state, action) => {
+            state.shippingAdd = action.payload
+        },
+        orderResponse: (state, action) => {
+            console.log('state and action of order response', state, action)
+            state.ordersData = action.payload
+        }
     },
 });
 
-export const { editProduct } = adminSlice.actions;
-export default adminSlice.reducer;
+export const { addShippingAddress, orderResponse } = orderSlice.actions;
+export default orderSlice.reducer;

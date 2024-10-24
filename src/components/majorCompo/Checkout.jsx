@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Trash2, Edit, ShoppingBag } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { addShippingAddress } from '../../store/orderSlice';
 
 export default function Checkout() {
   const cart = useSelector((state) => state.cart);
@@ -149,13 +150,15 @@ export default function Checkout() {
 
 function OrderSummary({ products, subtotal, shipping, tax, total, selectedAddress }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handlePlaceOrder = () => {
     if (!selectedAddress) {
       alert('Please select a shipping address!');
       return;
     }
-    navigate('/payment', { state: { selectedAddress } });
+    dispatch(addShippingAddress(selectedAddress))
+    navigate('/payment');
   };
   return (<>
     <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>

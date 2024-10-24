@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
 import { CreditCard, Smartphone, Building, Wallet, Lock, ChevronDown, ChevronUp, Edit2, Plus, Check, Clock, Phone } from 'lucide-react'
-import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom';
-
-
+import { useDispatch, useSelector } from 'react-redux'
+import { orderResponse } from '../../store/orderSlice'
+import { useNavigate } from 'react-router-dom'
 
 export default function PaymentPage() {
   const cart = useSelector(state => state.cart)
+  const orders = useSelector(state => state.orders)
+  const navigate = useNavigate()
   let products = cart.items
+  let address = orders.shippingAdd
   const [paymentMethod, setPaymentMethod] = useState('card')
   const [isMobileExpanded, setIsMobileExpanded] = useState(false)
-  const location = useLocation();
-  const { selectedAddress } = location.state || {};
+  const dispatch = useDispatch()
 
   const calculateAmount = (price, disPercent) =>
     Math.round(price - (price * (disPercent / 100)));
+
   const subtotal = products.reduce(
     (sum, item) =>
       sum + calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity,
@@ -24,10 +26,59 @@ export default function PaymentPage() {
   const tax = subtotal * 0.03;
   const total = subtotal + shipping + tax;
 
-  const handlePlaceOrder = () => {
-    console.log('Shipping address', selectedAddress)
-    console.log('cart items ', cart.items)
-  }
+  const placeOrder = async (productArray, shippingAddress) => {
+    try {
+      const response = await fetch(`/api/users/add-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productArray, shippingAddress }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to place order');
+      } else {
+        dispatch(orderResponse(data.order))
+        if (data.success) {
+          navigate('/order-confirmed')
+        }
+      }
+
+    } catch (error) {
+      console.error('Order error:', error.message);
+      throw error;
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!cart?.items?.length) {
+      alert('Your cart is empty. Please add items to place an order.');
+      return;
+    }
+
+    if (!orders?.shippingAdd) {
+      alert('Please provide a shipping address.');
+      return;
+    }
+
+    try {
+      const productArray = cart.items.map((item) => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        size: item.size._id,
+        amount: calculateAmount(item.productId.price, item.productId.discountPercentage),
+      }));
+
+      const shippingAddress = orders.shippingAdd;
+
+      placeOrder(productArray, shippingAddress);
+
+      // Optional: Clear cart or redirect to order confirmation page
+    } catch (error) {
+      alert('Failed to place order. Please try again.');
+    }
+  };
 
   const renderOrderSummary = () => (
     <>
@@ -131,12 +182,11 @@ export default function PaymentPage() {
       )}
 
       <hr className="my-6 border-indigo-200" />
-
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-indigo-800">Billing Address</h3>
         <div className="flex justify-between items-center bg-white p-3 rounded-md shadow-sm">
-          <p className="text-sm text-purple-700">{selectedAddress.street}, {selectedAddress.city}, {selectedAddress.state} {selectedAddress.zipCode}</p>
-          <p className="text-sm text-purple-700">Type: {selectedAddress.type}</p>
+          <p className="text-sm text-purple-700">{address.street}, {address.city}, {address.state} {address.zipCode}</p>
+          <p className="text-sm text-purple-700">Type: {address.type}</p>
 
         </div>
 
