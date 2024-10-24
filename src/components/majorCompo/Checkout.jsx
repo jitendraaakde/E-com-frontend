@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Trash2, Edit, ShoppingBag } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 export default function Checkout() {
   const cart = useSelector((state) => state.cart);
   const [addresses, setAddresses] = useState([]);
   const products = cart.items;
   const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
-  const [editingAddress, setEditingAddress] = useState(null); // Track current editing address
+  const [editingAddress, setEditingAddress] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState();
 
   const calculateAmount = (price, disPercent) =>
@@ -23,7 +23,7 @@ export default function Checkout() {
       const data = await response.json();
       if (response.ok) {
         setAddresses(data.userAddresses);
-        setSelectedAddress(data.userAddresses[0]?._id);
+        setSelectedAddress(data?.userAddresses[0]);
       } else {
         throw new Error(data.message || 'Error getting addresses');
       }
@@ -106,8 +106,8 @@ export default function Checkout() {
                       type="radio"
                       name="address"
                       value={address._id}
-                      checked={selectedAddress === address._id}
-                      onChange={() => setSelectedAddress(address._id)}
+                      checked={selectedAddress === address}
+                      onChange={() => setSelectedAddress(address)}
                       className="mr-2 text-indigo-600 focus:ring-indigo-500"
                     />
                     <span className="text-gray-700">
@@ -131,7 +131,7 @@ export default function Checkout() {
           </div>
 
           <div className="w-full lg:w-1/2">
-            <OrderSummary products={products} subtotal={subtotal} shipping={shipping} tax={tax} total={total} />
+            <OrderSummary products={products} subtotal={subtotal} shipping={shipping} tax={tax} total={total} selectedAddress={selectedAddress} />
           </div>
         </div>
       </div>
@@ -147,7 +147,16 @@ export default function Checkout() {
   );
 }
 
-function OrderSummary({ products, subtotal, shipping, tax, total }) {
+function OrderSummary({ products, subtotal, shipping, tax, total, selectedAddress }) {
+  const navigate = useNavigate();
+
+  const handlePlaceOrder = () => {
+    if (!selectedAddress) {
+      alert('Please select a shipping address!');
+      return;
+    }
+    navigate('/payment', { state: { selectedAddress } });
+  };
   return (<>
     <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>
     <div className="bg-white rounded-lg p-6 shadow-md">
@@ -164,10 +173,10 @@ function OrderSummary({ products, subtotal, shipping, tax, total }) {
       </div>
       <SummaryDetails subtotal={subtotal} shipping={shipping} tax={tax} total={total} />
 
-      <Link to={'/payment'} className="w-full mt-4 bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition-colors text-lg font-semibold flex items-center justify-center">
+      <button onClick={handlePlaceOrder} className="w-full mt-4 bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition-colors text-lg font-semibold flex items-center justify-center">
         <ShoppingBag className="mr-2" size={24} />
         Place Order
-      </Link>
+      </button>
 
     </div>
   </>

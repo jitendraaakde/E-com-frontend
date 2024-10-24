@@ -44,7 +44,6 @@ const router = createBrowserRouter([
       {
         path: '/login', element: <Login />
       }, {
-        //confirm
         path: '/product/:id', element: <SingleProduct />
       }, {
         path: '/cart', element: <Cart />
@@ -53,15 +52,12 @@ const router = createBrowserRouter([
         path: '/order-history', element: <OrderHistory />
       }
       , {
-        //confirm
         path: '/admin-portal', element: <AdminDashboard />
       }
       , {
-        //confirm
         path: '/profile', element: <UserProfilePortal />
       }
       , {
-        //confirm
         path: '/contact', element: <ContactUs />
       }, {
         path: '/example', element: <Example />

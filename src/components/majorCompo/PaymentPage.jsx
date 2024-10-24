@@ -1,76 +1,84 @@
 import React, { useState } from 'react'
 import { CreditCard, Smartphone, Building, Wallet, Lock, ChevronDown, ChevronUp, Edit2, Plus, Check, Clock, Phone } from 'lucide-react'
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom';
 
-const products = [
-  { id: 1, name: "Wireless Headphones", price: 129.99, image: "/placeholder.svg" },
-  { id: 2, name: "Smartwatch", price: 199.99, image: "/placeholder.svg" },
-]
+
 
 export default function PaymentPage() {
+  const cart = useSelector(state => state.cart)
+  let products = cart.items
   const [paymentMethod, setPaymentMethod] = useState('card')
-  const [isAddressExpanded, setIsAddressExpanded] = useState(false)
-  const [discountCode, setDiscountCode] = useState('')
-  const [isDiscountApplied, setIsDiscountApplied] = useState(false)
   const [isMobileExpanded, setIsMobileExpanded] = useState(false)
+  const location = useLocation();
+  const { selectedAddress } = location.state || {};
 
-  const subtotal = products.reduce((sum, product) => sum + product.price, 0)
-  const tax = subtotal * 0.08
-  const deliveryCharge = 9.99
-  const total = subtotal + tax + deliveryCharge
+  const calculateAmount = (price, disPercent) =>
+    Math.round(price - (price * (disPercent / 100)));
+  const subtotal = products.reduce(
+    (sum, item) =>
+      sum + calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity,
+    0
+  );
+  const shipping = 120;
+  const tax = subtotal * 0.03;
+  const total = subtotal + shipping + tax;
 
-  const handleApplyDiscount = () => {
-    setIsDiscountApplied(discountCode.toLowerCase() === 'discount10')
+  const handlePlaceOrder = () => {
+    console.log('Shipping address', selectedAddress)
+    console.log('cart items ', cart.items)
   }
 
   const renderOrderSummary = () => (
-    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 rounded-lg shadow-lg border border-purple-100">
+    <>
       <h2 className="text-2xl font-bold mb-4 text-purple-800">Order Summary</h2>
-      <div className="space-y-4 mb-6">
-        {products.map((product) => (
-          <div key={product.id} className="flex items-center space-x-4 bg-white p-3 rounded-md shadow-sm transition-all duration-300 hover:shadow-md">
-            <div className="relative w-16 h-16 overflow-hidden rounded-md">
-              <img src={product.image} alt={product.name} layout="fill" objectFit="cover" className="transition-transform duration-300 hover:scale-110" />
+      <div className="bg-white p-6 rounded-lg shadow-lg border border-purple-100">
+        <div className="space-y-4 mb-6">
+          {products.map((product) => (
+            <div key={product.productId._id} className="flex items-center space-x-4 bg-gray-200 p-3 rounded-md shadow-sm transition-all duration-300 hover:shadow-md">
+              <div className="relative w-16 h-22 overflow-hidden rounded-md">
+                <img src={product.productId.images[0].url} alt={product.productId.name} layout="fill" objectFit="cover" className="transition-transform duration-300 hover:scale-110" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium text-purple-700">{product.productId.name}</h3>
+                <p className="text-sm text-purple-500">Quantity: {product.quantity}</p>
+              </div>
+              <p className="font-semibold text-indigo-600">${product.productId.price.toFixed(2)}</p>
             </div>
-            <div className="flex-1">
-              <h3 className="font-medium text-purple-700">{product.name}</h3>
-              <p className="text-sm text-purple-500">Quantity: 1</p>
-            </div>
-            <p className="font-semibold text-indigo-600">${product.price.toFixed(2)}</p>
+          ))}
+        </div>
+        <hr className="my-4 border-purple-200" />
+        <div className="space-y-2 text-purple-800">
+          <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span>${subtotal.toFixed(2)}</span>
           </div>
-        ))}
-      </div>
-      <hr className="my-4 border-purple-200" />
-      <div className="space-y-2 text-purple-800">
-        <div className="flex justify-between">
-          <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Tax</span>
-          <span>${tax.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Delivery Charge</span>
-          <span>${deliveryCharge.toFixed(2)}</span>
-        </div>
-        <hr className="my-2 border-purple-200" />
-        <div className="flex justify-between font-bold text-lg text-indigo-700">
-          <span>Total</span>
-          <span>${total.toFixed(2)}</span>
+          <div className="flex justify-between">
+            <span>Tax</span>
+            <span>${tax.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Delivery Charge</span>
+            <span>${shipping.toFixed(2)}</span>
+          </div>
+          <hr className="my-2 border-purple-200" />
+          <div className="flex justify-between font-bold text-lg text-indigo-700">
+            <span>Total</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 
-  const renderPaymentOptions = () => (
+  const renderPaymentOptions = () => (<>
+    <h2 className="text-2xl font-bold mb-4 text-indigo-800">Payment Method</h2>
     <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-lg shadow-lg border border-indigo-100">
-      <h2 className="text-2xl font-bold mb-4 text-indigo-800">Payment Method</h2>
       <div className="space-y-4">
         {[
           { value: 'card', label: 'Credit/Debit Card', icon: CreditCard },
           { value: 'upi', label: 'UPI', icon: Smartphone },
           { value: 'netbanking', label: 'Net Banking', icon: Building },
-          { value: 'wallet', label: 'Wallets & Other Options', icon: Wallet },
         ].map(({ value, label, icon: Icon }) => (
           <div key={value} className="flex items-center space-x-2 bg-white p-3 rounded-md shadow-sm transition-all duration-300 hover:shadow-md">
             <input
@@ -122,39 +130,21 @@ export default function PaymentPage() {
         </div>
       )}
 
-      <div className="mt-6 text-sm text-indigo-600 flex items-center bg-indigo-50 p-3 rounded-md">
-        <Lock className="h-4 w-4 mr-2 text-indigo-500" />
-        <span>Your payment is secure. We use SSL encryption to protect your data.</span>
-      </div>
-
       <hr className="my-6 border-indigo-200" />
 
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-indigo-800">Billing Address</h3>
         <div className="flex justify-between items-center bg-white p-3 rounded-md shadow-sm">
-          <p className="text-sm text-purple-700">123 Main St, Anytown, ST 12345</p>
-          <button
-            onClick={() => setIsAddressExpanded(!isAddressExpanded)}
-            className="p-1 text-indigo-600 border border-indigo-300 rounded hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            {isAddressExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          </button>
+          <p className="text-sm text-purple-700">{selectedAddress.street}, {selectedAddress.city}, {selectedAddress.state} {selectedAddress.zipCode}</p>
+          <p className="text-sm text-purple-700">Type: {selectedAddress.type}</p>
+
         </div>
-        {isAddressExpanded && (
-          <div className="mt-4 space-y-2">
-            <button className="w-full p-2 text-left text-purple-700 border border-purple-300 rounded hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
-              <Edit2 className="h-4 w-4 inline mr-2" /> Edit Address
-            </button>
-            <button className="w-full p-2 text-left text-purple-700 border border-purple-300 rounded hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
-              <Plus className="h-4 w-4 inline mr-2" /> Add New Address
-            </button>
-          </div>
-        )}
+
       </div>
 
       <hr className="my-6 border-indigo-200" />
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-indigo-800">Discount Code</h3>
         <div className="flex space-x-2">
           <input
@@ -165,7 +155,6 @@ export default function PaymentPage() {
             className="flex-grow p-2 border border-indigo-200 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <button
-            onClick={handleApplyDiscount}
             className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
             Apply
@@ -176,9 +165,9 @@ export default function PaymentPage() {
             <Check className="h-4 w-4 mr-1" /> Discount applied successfully!
           </p>
         )}
-      </div>
+      </div> */}
 
-      <button className="w-full py-4 px-6 text-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
+      <button onClick={handlePlaceOrder} className="w-full py-4 px-6 text-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
         Place Order
       </button>
 
@@ -193,12 +182,12 @@ export default function PaymentPage() {
         </p>
       </div>
     </div>
+  </>
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-indigo-100 to-purple-100 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 py-8">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">Secure Checkout</h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="lg:col-span-1">
             {renderOrderSummary()}
