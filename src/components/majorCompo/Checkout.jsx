@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Trash2, Edit, ShoppingBag } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom'
 
 export default function Checkout() {
-  const cart = useSelector(state => state.cart)
+  const cart = useSelector((state) => state.cart);
   const [addresses, setAddresses] = useState([]);
-  const products = cart.items
+  const products = cart.items;
   const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
-  const [editingAddress, setEditingAddress] = useState(null);
+  const [editingAddress, setEditingAddress] = useState(null); // Track current editing address
   const [selectedAddress, setSelectedAddress] = useState();
-  const calculateAmount = (price, disPercent) => {
-    return Math.round(price - (price * (disPercent / 100)))
-  }
+
+  const calculateAmount = (price, disPercent) =>
+    Math.round(price - (price * (disPercent / 100)));
+
   const initialAddressesFetch = async () => {
     try {
       const response = await fetch(`/api/users/get-addresses`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
-
       const data = await response.json();
       if (response.ok) {
-        if (data) {
-          setAddresses(data.userAddresses)
-          setSelectedAddress(data.userAddresses[0]._id)
-        } else {
-          throw new Error('Address not found');
-        }
+        setAddresses(data.userAddresses);
+        setSelectedAddress(data.userAddresses[0]?._id);
       } else {
         throw new Error(data.message || 'Error getting addresses');
       }
@@ -37,7 +32,16 @@ export default function Checkout() {
     }
   };
 
-  const subtotal = products.reduce((sum, item) => sum + calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity, 0);
+  const handleAddAddressClick = () => {
+    setEditingAddress(null);
+    setIsAddressFormOpen(true);
+  };
+
+  const subtotal = products.reduce(
+    (sum, item) =>
+      sum + calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity,
+    0
+  );
   const shipping = 120;
   const tax = subtotal * 0.03;
   const total = subtotal + shipping + tax;
@@ -46,62 +50,48 @@ export default function Checkout() {
     try {
       const response = await fetch(`/api/users/add-addresses`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newAddress)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newAddress),
       });
 
       const data = await response.json();
       if (response.ok) {
-        if (data) {
-          initialAddressesFetch()
-          console.log('response address added', data)
-        } else {
-          throw new Error('Address not found');
-        }
+        initialAddressesFetch();
       } else {
-        throw new Error(data.message || 'Error getting addresses');
+        throw new Error(data.message || 'Error adding address');
       }
     } catch (error) {
-      console.error('Error getting addresses:', error.message);
+      console.error('Error adding address:', error.message);
     }
   };
 
   const handleEditAddress = (address) => {
-    console.log('Edit Address', address)
-    setEditingAddress(address)
+    setEditingAddress(address);
+    setIsAddressFormOpen(true);
   };
 
   const handleDeleteAddress = async (id) => {
     try {
       const response = await fetch(`/api/users/delete-address/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
 
       const data = await response.json();
       if (response.ok) {
-        if (data) {
-          initialAddressesFetch()
-          console.log('Address deleted', data)
-        } else {
-          throw new Error('Address not found');
-        }
+        initialAddressesFetch();
       } else {
-        throw new Error(data.message || 'Error getting addresses');
+        throw new Error(data.message || 'Error deleting address');
       }
     } catch (error) {
-      console.error('Error getting addresses:', error.message);
+      console.error('Error deleting address:', error.message);
     }
-
   };
 
   useEffect(() => {
-    initialAddressesFetch()
-  }, [])
+    initialAddressesFetch();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -110,7 +100,7 @@ export default function Checkout() {
             <h2 className="text-2xl font-bold mb-4 text-slate-800">Delivery Address</h2>
             <div className="bg-white rounded-lg p-6 shadow-md">
               {addresses.map((address) => (
-                <div className="flex items-center justify-between mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50">
+                <div className="flex items-center justify-between mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50" key={address._id}>
                   <label className="flex items-center cursor-pointer flex-grow">
                     <input
                       type="radio"
@@ -135,54 +125,74 @@ export default function Checkout() {
                 </div>
               ))}
             </div>
-            <button onClick={() => setIsAddressFormOpen(true)} className="w-full mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
+            <button onClick={handleAddAddressClick} className="w-full mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
               + Add New Address
             </button>
           </div>
 
           <div className="w-full lg:w-1/2">
-            <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              <div className="max-h-64 overflow-y-auto mb-4">
-                {products.map((product) => (
-                  <div className="flex items-center mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50">
-                    <img src={product.productId.images[0].url} className="w-20 h-28 object-cover rounded-md mr-4" />
-                    <div>
-                      <h3 className="font-bold text-indigo-800">{product.productId.name}</h3>
-                      <p className="text-indigo-600">${product.productId.price.toFixed(2)}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-gray-200 pt-4">
-                <div className="flex justify-between mb-2 text-gray-600">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2 text-gray-600">
-                  <span>Tax</span>
-                  <span>${tax.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2 text-gray-600">
-                  <span>Delivery Charge</span>
-                  <span>${shipping.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-bold mt-4 text-xl text-indigo-800">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-            <button className="w-full mt-4 bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition-colors text-lg font-semibold flex items-center justify-center">
-              <ShoppingBag className="mr-2" size={24} />
-              Place Order
-            </button>
+            <OrderSummary products={products} subtotal={subtotal} shipping={shipping} tax={tax} total={total} />
           </div>
         </div>
       </div>
+
       {isAddressFormOpen && (
-        <AddressForm onSubmit={handleAddAddress} initialData={editingAddress} onClose={() => setIsAddressFormOpen(false)} />
+        <AddressForm
+          onSubmit={handleAddAddress}
+          initialData={editingAddress}
+          onClose={() => setIsAddressFormOpen(false)}
+        />
       )}
+    </div>
+  );
+}
+
+function OrderSummary({ products, subtotal, shipping, tax, total }) {
+  return (<>
+    <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>
+    <div className="bg-white rounded-lg p-6 shadow-md">
+      <div className="max-h-64 overflow-y-auto mb-4">
+        {products.map((product) => (
+          <div className="flex items-center mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50" key={product.productId._id}>
+            <img src={product.productId.images[0].url} className="w-20 h-28 object-cover rounded-md mr-4" />
+            <div>
+              <h3 className="font-bold text-indigo-800">{product.productId.name}</h3>
+              <p className="text-indigo-600">${product.productId.price.toFixed(2)}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <SummaryDetails subtotal={subtotal} shipping={shipping} tax={tax} total={total} />
+
+      <Link to={'/payment'} className="w-full mt-4 bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition-colors text-lg font-semibold flex items-center justify-center">
+        <ShoppingBag className="mr-2" size={24} />
+        Place Order
+      </Link>
+
+    </div>
+  </>
+  );
+}
+
+function SummaryDetails({ subtotal, shipping, tax, total }) {
+  return (
+    <div className="border-t border-gray-200 pt-4">
+      <div className="flex justify-between mb-2 text-gray-600">
+        <span>Subtotal</span>
+        <span>${subtotal.toFixed(2)}</span>
+      </div>
+      <div className="flex justify-between mb-2 text-gray-600">
+        <span>Tax</span>
+        <span>${tax.toFixed(2)}</span>
+      </div>
+      <div className="flex justify-between mb-2 text-gray-600">
+        <span>Delivery Charge</span>
+        <span>${shipping.toFixed(2)}</span>
+      </div>
+      <div className="flex justify-between font-bold mt-4 text-xl text-indigo-800">
+        <span>Total</span>
+        <span>${total.toFixed(2)}</span>
+      </div>
     </div>
   );
 }
@@ -199,15 +209,29 @@ function AddressForm({ onSubmit, initialData, onClose }) {
     type: '',
     _id: ''
   });
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('FormData', formData)
     onSubmit(formData);
+    setFormData({
+      street: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: '',
+      type: '',
+      _id: ''
+    })
+
   };
+
+  const handleRemoveData = () => {
+    onClose()
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
@@ -303,11 +327,10 @@ function AddressForm({ onSubmit, initialData, onClose }) {
           {formData._id && (
             <input type="hidden" name="_id" value={formData._id} />
           )}
-
           <div className="flex justify-end gap-4 mt-6">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleRemoveData}
               className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
             >
               Cancel
@@ -323,4 +346,4 @@ function AddressForm({ onSubmit, initialData, onClose }) {
       </div>
     </div>
   );
-}
+} 
