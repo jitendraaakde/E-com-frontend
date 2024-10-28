@@ -26,7 +26,6 @@ export default function Products() {
         });
 
         const data = await response.json();
-        console.log('filterd data from backend', data)
         if (response.ok) {
           dispatch(initialFetch(data.products));
         } else {

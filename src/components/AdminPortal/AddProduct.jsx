@@ -165,18 +165,16 @@ export default function AddProduct() {
       });
 
       const data = await response.json();
-
+      if (data) {
+        fetchCategories()
+      }
     } catch (error) {
       console.error('Category add failed:', error.message);
     }
   };
   useEffect(() => {
     fetchCategories()
-  }, [addNewCategory])
-
-
-
-
+  }, [])
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-4">Add New Product</h2>

@@ -24,7 +24,6 @@ export default function Navbar() {
             if (response.ok) {
                 if (data.cart) {
                     dispatch(SliceAddToCart({ items: data.cart, totalItems: data.cart.length }));
-                    console.log('Navbar', data.cart)
                 } else {
                     throw new Error('Cart data not found in response');
                 }

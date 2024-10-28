@@ -33,7 +33,6 @@ export default function SingleProduct() {
                 throw new Error(data.message || 'Error fetching product');
             }
 
-            console.log('data product', data.product);
 
             if (data.product) {
                 setProductData(data.product);

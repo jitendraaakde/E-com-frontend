@@ -210,7 +210,6 @@ function SummaryDetails({ subtotal, shipping, tax, total }) {
 }
 
 function AddressForm({ onSubmit, initialData, onClose }) {
-  console.log('Initial data', initialData)
 
   const [formData, setFormData] = useState(initialData || {
     street: '',

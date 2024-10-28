@@ -272,7 +272,7 @@ function ChangePasswordContent() {
                             onClick={() => togglePasswordVisibility('curr')}
                             className="absolute inset-y-0 right-0 flex items-center pr-3"
                         >
-                            {showPass.curr ? <FaEyeSlash /> : <FaEye />}
+                            {showPass.curr ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>
                 </div>
@@ -295,7 +295,7 @@ function ChangePasswordContent() {
                             onClick={() => togglePasswordVisibility('new')}
                             className="absolute inset-y-0 right-0 flex items-center pr-3"
                         >
-                            {showPass.new ? <FaEyeSlash /> : <FaEye />}
+                            {showPass.new ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>
                 </div>
@@ -318,7 +318,7 @@ function ChangePasswordContent() {
                             onClick={() => togglePasswordVisibility('confirm')}
                             className="absolute inset-y-0 right-0 flex items-center pr-3"
                         >
-                            {showPass.confirm ? <FaEyeSlash /> : <FaEye />}
+                            {showPass.confirm ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>
                 </div>

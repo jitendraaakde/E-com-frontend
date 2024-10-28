@@ -16,7 +16,6 @@ const Profile = () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
-        console.log('formEntries of Signup', formEntries)
 
         try {
             const response = await fetch('/api/users/signup', {
@@ -28,7 +27,6 @@ const Profile = () => {
             });
 
             const data = await response.json();
-            console.log('response of OTP', data)
 
             if (!response.ok) {
                 toast.error(data.message || 'Signup failed');
@@ -50,7 +48,6 @@ const Profile = () => {
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
         formEntries.email = userEmail;
-        console.log('formEntires of OTP', formEntries)
 
         try {
             const response = await fetch('/api/users/otp', {
@@ -62,7 +59,6 @@ const Profile = () => {
             });
 
             const data = await response.json();
-            console.log('Response of OTP:', data);
             if (!response.ok) {
                 toast.error(data.message)
                 return;

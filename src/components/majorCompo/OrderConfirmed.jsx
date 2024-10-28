@@ -1,15 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
 
 export default function OrderConfirmation() {
   const navigate = useNavigate()
+  const { ordersData } = useSelector(state => state.orders)
   const orderNumber = "12345"
   const estimatedDelivery = "May 15, 2024"
-  const orderDetails = [
-    { name: "Wireless Earbuds", quantity: 1, price: 129.99, image: "/placeholder.svg?height=80&width=80" },
-    { name: "Smart Watch", quantity: 1, price: 199.99, image: "/placeholder.svg?height=80&width=80" },
-  ]
-  const subtotal = orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const subtotal = ordersData.products.reduce((acc, item) => acc + item.amount * item.quantity, 0)
   const tax = subtotal * 0.1
   const shipping = 9.99
   const total = subtotal + tax + shipping
@@ -33,21 +32,26 @@ export default function OrderConfirmation() {
 
             <div className="space-y-4">
               <h3 className="font-semibold text-lg text-purple-600">Order Summary</h3>
-              {orderDetails.map((item, index) => (
+              {ordersData.products.map((item, index) => (
                 <div key={index} className="flex items-center space-x-4 bg-white p-3 md:p-4 rounded-lg shadow-md">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 md:w-20 md:h-20 object-cover rounded" />
+                  <img src={item?.productId?.images[0]?.url} alt={item.productId.name} className="w-16 h-16 md:w-20 md:h-20 object-cover rounded" />
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-800 text-sm md:text-base">{item.name}</h4>
+                    <h4 className="font-medium text-gray-800 text-sm md:text-base">{item.productId.name}</h4>
                     <p className="text-xs md:text-sm text-gray-600">Quantity: {item.quantity}</p>
                   </div>
-                  <p className="font-medium text-pink-600 text-sm md:text-base">${item.price.toFixed(2)}</p>
+                  <p className="font-medium text-pink-600 text-sm md:text-base">${item.amount.toFixed(2)}</p>
                 </div>
               ))}
             </div>
 
             <div className="space-y-2">
               <h3 className="font-semibold text-lg text-purple-600">Delivery Address</h3>
-              <p className="text-gray-600 text-sm md:text-base">123 Main St, Anytown, ST 12345, USA</p>
+              <p className="text-gray-600 text-sm md:text-base">{ordersData.shippingAddress
+                .street}, {ordersData.shippingAddress
+                  .city}, {ordersData.shippingAddress
+                    .state}, {ordersData.shippingAddress
+                      .zipCode}, Type: {ordersData.shippingAddress
+                        .type}</p>
 
             </div>
 

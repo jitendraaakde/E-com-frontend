@@ -38,7 +38,6 @@ const CartComponent = () => {
     };
 
     const updateCartItem = async (id, property, value) => {
-        console.log('product id, property, value', id, property, value)
         try {
             const response = await fetch(`/api/product/update-cart-item/${id}`, {
                 method: 'PATCH',
@@ -52,7 +51,6 @@ const CartComponent = () => {
 
             if (response.ok) {
                 if (data.cart) {
-                    console.log('Updated cart:', data.cart);
                     dispatch(SliceAddToCart({ items: data.cart, totalItems: data.cart.length }));
                 } else {
                     throw new Error('Cart data not found in response');

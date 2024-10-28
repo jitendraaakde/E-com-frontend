@@ -3,6 +3,7 @@ import { CreditCard, Smartphone, Building, Wallet, Lock, ChevronDown, ChevronUp,
 import { useDispatch, useSelector } from 'react-redux'
 import { orderResponse } from '../../store/orderSlice'
 import { useNavigate } from 'react-router-dom'
+import { SliceAddToCart } from '../../store/cartSlice'
 
 export default function PaymentPage() {
   const cart = useSelector(state => state.cart)
@@ -27,6 +28,7 @@ export default function PaymentPage() {
   const total = subtotal + shipping + tax;
 
   const placeOrder = async (productArray, shippingAddress) => {
+    console.log('Product data', productArray, shippingAddress)
     try {
       const response = await fetch(`/api/users/add-order`, {
         method: 'POST',
@@ -35,12 +37,17 @@ export default function PaymentPage() {
       });
 
       const data = await response.json();
-
+      console.log('response data', data)
       if (!response.ok) {
         throw new Error(data.message || 'Failed to place order');
       } else {
+        console.log('order response dispatch')
         dispatch(orderResponse(data.order))
         if (data.success) {
+          dispatch(SliceAddToCart({
+            items: [],
+            totalItems: 0,
+          }))
           navigate('/order-confirmed')
         }
       }
@@ -73,8 +80,6 @@ export default function PaymentPage() {
       const shippingAddress = orders.shippingAdd;
 
       placeOrder(productArray, shippingAddress);
-
-      // Optional: Clear cart or redirect to order confirmation page
     } catch (error) {
       alert('Failed to place order. Please try again.');
     }

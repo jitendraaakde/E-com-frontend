@@ -1,17 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function OrderManagement() {
-  const [orders, setOrders] = useState([
-    { id: 1, customerName: 'John Doe', total: 99.99, status: 'Pending', date: '2023-09-15' },
-    { id: 2, customerName: 'Jane Smith', total: 149.99, status: 'Shipped', date: '2023-09-14' },
-    { id: 3, customerName: 'Bob Johnson', total: 79.99, status: 'Delivered', date: '2023-09-13' },
-  ])
+  const [orders, setOrders] = useState([])
 
   const handleStatusChange = (orderId, newStatus) => {
-    setOrders(orders.map(order => 
+    setOrders(orders.map(order =>
       order.id === orderId ? { ...order, status: newStatus } : order
     ))
   }
+
+  const getOrders = async () => {
+    try {
+      const response = await fetch(`/api/admin/get-orders`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setOrders(data.response)
+      } else {
+        throw new Error(data.message || 'Error fetching products');
+      }
+    } catch (error) {
+      console.error('Fetch failed:', error.message);
+    }
+  }
+  useEffect(() => {
+    getOrders()
+  }, [])
 
   return (
     <div>
@@ -30,9 +50,9 @@ export default function OrderManagement() {
         <tbody>
           {orders.map((order) => (
             <tr key={order.id}>
-              <td className="px-4 py-2">{order.id}</td>
+              <td className="px-4 py-2">{order._id}</td>
               <td className="px-4 py-2">{order.customerName}</td>
-              <td className="px-4 py-2">${order.total.toFixed(2)}</td>
+              {/* <td className="px-4 py-2">${order.total.toFixed(2)}</td> */}
               <td className="px-4 py-2">{order.status}</td>
               <td className="px-4 py-2">{order.date}</td>
               <td className="px-4 py-2">
