@@ -17,7 +17,6 @@ export default function OrderHistory() {
 
             if (response.ok) {
                 setHistory(data.orders);
-                console.log('Order history fetched', data);
             } else {
                 throw new Error(data.msg || 'Error fetching order history');
             }

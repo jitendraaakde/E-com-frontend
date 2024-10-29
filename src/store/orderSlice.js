@@ -15,7 +15,6 @@ const orderSlice = createSlice({
             state.shippingAdd = action.payload
         },
         orderResponse: (state, action) => {
-            console.log('state and action of order response', state, action)
             state.ordersData = action.payload
         }
     },

@@ -28,7 +28,6 @@ export default function PaymentPage() {
   const total = subtotal + shipping + tax;
 
   const placeOrder = async (productArray, shippingAddress) => {
-    console.log('Product data', productArray, shippingAddress)
     try {
       const response = await fetch(`/api/users/add-order`, {
         method: 'POST',
@@ -37,11 +36,9 @@ export default function PaymentPage() {
       });
 
       const data = await response.json();
-      console.log('response data', data)
       if (!response.ok) {
         throw new Error(data.message || 'Failed to place order');
       } else {
-        console.log('order response dispatch')
         dispatch(orderResponse(data.order))
         if (data.success) {
           dispatch(SliceAddToCart({

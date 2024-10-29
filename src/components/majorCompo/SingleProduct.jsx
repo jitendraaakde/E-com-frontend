@@ -36,7 +36,7 @@ export default function SingleProduct() {
 
             if (data.product) {
                 setProductData(data.product);
-                setHoverImage(data.product.images?.[0]?.url || '');
+                setHoverImage(data?.product?.images?.[0]?.url || '');
                 dispatch(checkAlreadyInCart(data.product));
             } else {
                 throw new Error('Product data is missing');
