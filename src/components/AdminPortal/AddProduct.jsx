@@ -4,6 +4,8 @@ import { getStorage, uploadBytesResumable, ref, getDownloadURL } from 'firebase/
 import { app } from '../../store/firebase';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ImCross } from "react-icons/im";
+import { toast } from 'react-toastify';
+
 
 export default function AddProduct() {
   const [files, setFiles] = useState([]);
@@ -26,7 +28,8 @@ export default function AddProduct() {
       });
 
       const data = await response.json();
-      setMsg(data.msg)
+      setMsg(data.msg);
+      toast.success('Product Added')
       if (!response.ok) {
         throw new Error(data.message || `Error: ${response.statusText}`);
       }
@@ -40,11 +43,11 @@ export default function AddProduct() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (files.length > 0 && files.length <= 4) {
-          const promises = files.map(file => storeImage(file));
+          const promises = files.map((file) => storeImage(file));
           try {
             const urls = await Promise.all(promises);
             setImageUrls(urls);
-            setFormData({ ...formData, imageUrls: [...formData.imageUrls, ...urls] });
+            setFormData((prev) => ({ ...prev, imageUrls: urls }));
           } catch (error) {
             console.error('Error uploading images:', error);
           }
@@ -70,7 +73,8 @@ export default function AddProduct() {
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
-        'state_changed', null,
+        'state_changed',
+        null,
         (error) => reject(error),
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
@@ -79,6 +83,14 @@ export default function AddProduct() {
         }
       );
     });
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove));
+    setFormData((prev) => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((_, index) => index !== indexToRemove),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -109,7 +121,7 @@ export default function AddProduct() {
   const handleRemoveCategory = (categoryToRemove) => {
     setFormData((prev) => ({
       ...prev,
-      categories: prev.categories.filter(category => category !== categoryToRemove),
+      categories: prev.categories.filter((category) => category !== categoryToRemove),
     }));
   };
 
@@ -131,6 +143,7 @@ export default function AddProduct() {
       setFiles(selectedFiles);
     }
   };
+
   const fetchCategories = async () => {
     try {
       const response = await fetch('/api/admin/get-category', {
@@ -141,40 +154,38 @@ export default function AddProduct() {
       });
 
       const data = await response.json();
-      let catArray = [];
-      for (let category of data.categories) {
-        catArray.push(category.name)
-      }
-      setAvailableCategories(catArray)
+      setAvailableCategories(data.categories.map((category) => category.name));
       if (!response.ok) {
         throw new Error(data.message || `Error: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('category fetch failed:', error.message);
+      console.error('Category fetch failed:', error.message);
     }
-  }
+  };
+
   const addNewCategory = async (categoryName) => {
-    newCategory.current.value = ''
+    newCategory.current.value = '';
     try {
       const response = await fetch('/api/admin/add-category', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: categoryName })
+        body: JSON.stringify({ name: categoryName }),
       });
 
       const data = await response.json();
       if (data) {
-        fetchCategories()
+        fetchCategories();
       }
     } catch (error) {
       console.error('Category add failed:', error.message);
     }
   };
+
   useEffect(() => {
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
   return (
     <div className="bg-white shadow rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
@@ -312,30 +323,38 @@ export default function AddProduct() {
           />
         </div>
         <label className="block mb-1 font-medium">Product Images (up to 4)</label>
-        <div className='flex gap-2'>
+        <div className="flex gap-2">
           <input
             type="file"
             accept="image/*"
             multiple
-            className="w-[50%] p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             ref={fileRef}
             onChange={handleFileChange}
+            className="w-[50%] p-2 border rounded"
           />
           <button
             type="button"
             onClick={handleImageSubmit}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           >
             Upload Images
           </button>
         </div>
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-        <div className='flex gap-3'>
+        <div className="flex gap-3 mt-2">
           {imageUrls.map((url, index) => (
-            <img key={index} src={url} alt={`Uploaded ${index}`} className="rounded-md w-[10%]" />
+            <div key={index} className="relative">
+              <img src={url} alt={`Uploaded ${index}`} className="w-24 h-24 rounded-md" />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(index)}
+                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+              >
+                <ImCross />
+              </button>
+            </div>
           ))}
         </div>
-        <p>{msg}</p>
         <div className="flex justify-end space-x-4">
           <button
             type="submit"

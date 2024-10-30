@@ -13,7 +13,7 @@ export default function Product({ product }) {
           <img
             src={product?.images[0]?.url}
             alt="Product"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover max-h-72 max-w-full"
           />
         </div>
         <div className={`p-4 w-full`}>
@@ -26,8 +26,8 @@ export default function Product({ product }) {
             <span className="text-green-600 text-sm">{product.discountPercentage}% off</span>
           </div>
         </div>
-
       </div>
     </Link>
+
   )
 }

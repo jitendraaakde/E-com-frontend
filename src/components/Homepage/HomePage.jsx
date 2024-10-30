@@ -6,7 +6,7 @@ import FeaturedProducts from './FeaturedProducts'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col mt-16">
       <main className="flex-grow">
         <HeroSection />
         <CategoryCards />

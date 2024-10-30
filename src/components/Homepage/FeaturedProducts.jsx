@@ -1,11 +1,13 @@
 import React from 'react'
 import { FaStar, FaShoppingCart } from 'react-icons/fa'
+import img1 from '../../../public/product 2.png'
+
 
 const featuredProducts = [
-  { id: 1, name: 'Best Seller 1', price: 99.99, rating: 4.5, image: '/placeholder.svg?height=300&width=300', badge: 'Best Seller' },
-  { id: 2, name: 'Limited Offer 1', price: 79.99, rating: 4.2, image: '/placeholder.svg?height=300&width=300', badge: 'Limited Time' },
-  { id: 3, name: 'New Arrival 1', price: 129.99, rating: 4.8, image: '/placeholder.svg?height=300&width=300', badge: 'New Arrival' },
-  { id: 4, name: 'Best Seller 2', price: 89.99, rating: 4.6, image: '/placeholder.svg?height=300&width=300', badge: 'Best Seller' },
+  { id: 1, name: 'Best Seller 1', price: 99.99, rating: 4.5, image: `${img1}?height=300&width=300`, badge: 'Best Seller' },
+  { id: 2, name: 'Limited Offer 1', price: 79.99, rating: 4.2, image: `${img1}?height=300&width=300`, badge: 'Limited Time' },
+  { id: 3, name: 'New Arrival 1', price: 129.99, rating: 4.8, image: `${img1}?height=300&width=300`, badge: 'New Arrival' },
+  { id: 4, name: 'Best Seller 2', price: 89.99, rating: 4.6, image: `${img1}?height=300&width=300`, badge: 'Best Seller' },
 ]
 
 export default function FeaturedProducts() {

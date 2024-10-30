@@ -1,13 +1,16 @@
 import React, { useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import img1 from '../../../public/product 2.png'
 
 const images = [
-  { id: 1, src: '/placeholder.svg?height=300&width=200', label: 'Product 1' },
-  { id: 2, src: '/placeholder.svg?height=300&width=200', label: 'Product 2' },
-  { id: 3, src: '/placeholder.svg?height=300&width=200', label: 'Product 3' },
-  { id: 4, src: '/placeholder.svg?height=300&width=200', label: 'Product 4' },
-  { id: 5, src: '/placeholder.svg?height=300&width=200', label: 'Product 5' },
-  { id: 6, src: '/placeholder.svg?height=300&width=200', label: 'Product 6' },
+  { id: 1, src: `${img1}?height=300&width=200`, label: 'Product 1' },
+  { id: 2, src: `${img1}?height=300&width=200`, label: 'Product 2' },
+  { id: 3, src: `${img1}?height=300&width=200`, label: 'Product 3' },
+  { id: 4, src: `${img1}?height=300&width=200`, label: 'Product 4' },
+  { id: 5, src: `${img1}?height=300&width=200`, label: 'Product 5' },
+  { id: 6, src: `${img1}?height=300&width=200`, label: 'Product 6' },
+  { id: 7, src: `${img1}?height=300&width=200`, label: 'Product 6' },
+  { id: 8, src: `${img1}?height=300&width=200`, label: 'Product 6' },
 ]
 
 export default function ImageSlider() {

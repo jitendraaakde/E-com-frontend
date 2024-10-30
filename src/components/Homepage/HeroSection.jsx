@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import img1 from '../../../public/1.jpg'
+import img2 from '../../../public/2.jpg'
+import img3 from '../../../public/3.jpg'
+
 
 const banners = [
-  { id: 1, image: '/placeholder.svg?height=600&width=1200', alt: 'Promotion 1' },
-  { id: 2, image: '/placeholder.svg?height=600&width=1200', alt: 'Promotion 2' },
-  { id: 3, image: '/placeholder.svg?height=600&width=1200', alt: 'Promotion 3' },
+  { id: 1, image: `${img1}?height=600&width=1200`, alt: 'Promotion 1' },
+  { id: 2, image: `${img2}?height=600&width=1200`, alt: 'Promotion 2' },
+  { id: 3, image: `${img3}?height=600&width=1200`, alt: 'Promotion 3' },
 ]
 
 export default function HeroSection() {

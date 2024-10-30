@@ -105,11 +105,11 @@ export default function SingleProduct() {
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-8xl w-full mx-auto">
                     <div className="flex flex-col lg:flex-row justify-center">
                         <div className="lg:w-2/5 p-6 lg:p-10 flex flex-col justify-between">
-                            <div className="aspect-square relative overflow-hidden rounded-xl shadow-lg mb-2">
+                            <div className="aspect-square relative overflow-hidden  mb-2 flex justify-center">
                                 <img
                                     src={hoverImage}
                                     alt="Main product image"
-                                    className="w-full h-full object-cover transition-opacity duration-300 hover:opacity-90"
+                                    className="h-full object-cover transition-opacity duration-300 hover:opacity-90 rounded-xl shadow-lg p-2"
                                 />
                             </div>
                             <div className="grid grid-cols-4 gap-4">

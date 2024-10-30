@@ -20,7 +20,7 @@ const initialFilters = [
     name: 'Gender',
     icon: BsPersonCircle,
     options: [
-      'Women', 'Men', 'Kids'
+      'Women', 'Men'
     ]
   },
   {

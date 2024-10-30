@@ -1,49 +1,51 @@
 import React from 'react'
+import img1 from '../../../public/product 2.png'
 
 const categories = [
   {
     id: 1,
-    title: "Men's Clothing",
+    title: "T-Shirts",
     images: [
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
     ],
   },
   {
     id: 2,
-    title: "Women's Clothing",
+    title: "Shirts",
     images: [
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
     ],
   },
   {
     id: 3,
-    title: 'Electronics',
+    title: 'Jeans',
     images: [
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
     ],
   },
   {
     id: 4,
-    title: 'Home & Kitchen',
+    title: 'Accessories',
     images: [
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
-      '/placeholder.svg?height=150&width=150',
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
+      `${img1}?height=150&width=150`,
     ],
   },
 ]
 
 export default function CategoryCards() {
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,13 +1,15 @@
 import React from 'react'
 import { FaShoppingCart } from 'react-icons/fa'
+import img1 from '../../../public/product 2.png'
+
 
 const products = [
-  { id: 1, name: 'Product 1', description: 'Description for Product 1', image: '/placeholder.svg?height=300&width=300' },
-  { id: 2, name: 'Product 2', description: 'Description for Product 2', image: '/placeholder.svg?height=300&width=300' },
-  { id: 3, name: 'Product 3', description: 'Description for Product 3', image: '/placeholder.svg?height=300&width=300' },
-  { id: 4, name: 'Product 4', description: 'Description for Product 4', image: '/placeholder.svg?height=300&width=300' },
-  { id: 5, name: 'Product 5', description: 'Description for Product 5', image: '/placeholder.svg?height=300&width=300' },
-  { id: 6, name: 'Product 6', description: 'Description for Product 6', image: '/placeholder.svg?height=300&width=300' },
+  { id: 1, name: 'Product 1', description: 'Description for Product 1', image: `${img1}?height=300&width=300` },
+  { id: 2, name: 'Product 2', description: 'Description for Product 2', image: `${img1}?height=300&width=300` },
+  { id: 3, name: 'Product 3', description: 'Description for Product 3', image: `${img1}?height=300&width=300` },
+  { id: 4, name: 'Product 4', description: 'Description for Product 4', image: `${img1}?height=300&width=300` },
+  { id: 5, name: 'Product 5', description: 'Description for Product 5', image: `${img1}?height=300&width=300` },
+  { id: 6, name: 'Product 6', description: 'Description for Product 6', image: `${img1}?height=300&width=300` },
 ]
 
 export default function ProductCategory() {
