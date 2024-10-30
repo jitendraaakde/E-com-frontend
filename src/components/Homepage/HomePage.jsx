@@ -1,8 +1,8 @@
 import HeroSection from './HeroSection'
-import CategoryCards from './CategoryCards'
 import ImageSlider from './ImageSlider'
 import ProductCategory from './ProductCategory'
 import FeaturedProducts from './FeaturedProducts'
+import CategoryCards from './CategoryCards'
 
 export default function HomePage() {
   return (
