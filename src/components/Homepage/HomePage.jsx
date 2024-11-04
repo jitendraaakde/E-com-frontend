@@ -11,7 +11,7 @@ export default function HomePage() {
         <HeroSection />
         <CategoryCards />
         <ImageSlider />
-        <ProductCategory />
+        {/* <ProductCategory /> */}
         <FeaturedProducts />
       </main>
     </div>

@@ -1,25 +1,43 @@
-import React from 'react'
-import { FaStar, FaShoppingCart } from 'react-icons/fa'
-import img1 from '../../../public/product 2.png'
+import React, { useEffect, useState } from 'react';
+import { FaStar, FaShoppingCart } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
+export default function FeaturedProducts({ category = 'jeans' }) {
+  const [products, setProducts] = useState([]);
 
-const featuredProducts = [
-  { id: 1, name: 'Best Seller 1', price: 99.99, rating: 4.5, image: `${img1}?height=300&width=300`, badge: 'Best Seller' },
-  { id: 2, name: 'Limited Offer 1', price: 79.99, rating: 4.2, image: `${img1}?height=300&width=300`, badge: 'Limited Time' },
-  { id: 3, name: 'New Arrival 1', price: 129.99, rating: 4.8, image: `${img1}?height=300&width=300`, badge: 'New Arrival' },
-  { id: 4, name: 'Best Seller 2', price: 89.99, rating: 4.6, image: `${img1}?height=300&width=300`, badge: 'Best Seller' },
-]
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`/api/product/products?category=Jeans`);
+        const data = await response.json();
+        console.log(data)
+        const formattedProducts = data.products.map((product) => ({
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          rating: product.rating,
+          image: product?.images[0]?.url,
+          badge: product.badge || 'Featured',
+        }));
+        setProducts(formattedProducts);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    };
 
-export default function FeaturedProducts() {
+    fetchProducts();
+  }, [category]);
+
   return (
     <div className="bg-gray-100 py-12">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-8 text-center">Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+          {products.map((product) => (
+
+            <Link to={`/product/${product.id}`} key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="relative">
-                <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
+                <img src={product.image} alt={product.name} className="w-full h-80   object-cover" />
                 <span className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
                   {product.badge}
                 </span>
@@ -35,13 +53,13 @@ export default function FeaturedProducts() {
                 </div>
                 <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center">
                   <FaShoppingCart className="mr-2" />
-                  Add to Cart
+                  Buy Now
                 </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

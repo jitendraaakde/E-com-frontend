@@ -1,53 +1,62 @@
-import React, { useRef, useState } from 'react'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import img1 from '../../../public/product 2.png'
+import React, { useEffect, useRef, useState } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom'
 
-const images = [
-  { id: 1, src: `${img1}?height=300&width=200`, label: 'Product 1' },
-  { id: 2, src: `${img1}?height=300&width=200`, label: 'Product 2' },
-  { id: 3, src: `${img1}?height=300&width=200`, label: 'Product 3' },
-  { id: 4, src: `${img1}?height=300&width=200`, label: 'Product 4' },
-  { id: 5, src: `${img1}?height=300&width=200`, label: 'Product 5' },
-  { id: 6, src: `${img1}?height=300&width=200`, label: 'Product 6' },
-  { id: 7, src: `${img1}?height=300&width=200`, label: 'Product 6' },
-  { id: 8, src: `${img1}?height=300&width=200`, label: 'Product 6' },
-]
+const ImageSlider = () => {
+  const sliderRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [images, setImages] = useState([]);
 
-export default function ImageSlider() {
-  const sliderRef = useRef(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/product/products?category=Shirts');
+        const data = await response.json();
+        const formattedImages = data.products.map((product) => ({
+          id: product._id,
+          src: product.images[0]?.url,
+          label: product.name,
+        }));
+        setImages(formattedImages);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const scroll = (direction) => {
     if (sliderRef.current) {
-      const { scrollLeft, clientWidth } = sliderRef.current
-      const scrollTo = direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth
-      sliderRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' })
+      const { scrollLeft, clientWidth } = sliderRef.current;
+      const scrollTo = direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth;
+      sliderRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
     }
-  }
+  };
 
   const startDragging = (e) => {
-    setIsDragging(true)
+    setIsDragging(true);
     if ('clientX' in e) {
-      setStartX(e.clientX - sliderRef.current.offsetLeft)
+      setStartX(e.clientX - sliderRef.current.offsetLeft);
     } else {
-      setStartX(e.touches[0].clientX - sliderRef.current.offsetLeft)
+      setStartX(e.touches[0].clientX - sliderRef.current.offsetLeft);
     }
-    setScrollLeft(sliderRef.current.scrollLeft)
-  }
+    setScrollLeft(sliderRef.current.scrollLeft);
+  };
 
   const stopDragging = () => {
-    setIsDragging(false)
-  }
+    setIsDragging(false);
+  };
 
   const onDrag = (e) => {
-    if (!isDragging) return
-    e.preventDefault()
-    const x = 'clientX' in e ? e.clientX : e.touches[0].clientX
-    const walk = (x - startX) * 2
-    sliderRef.current.scrollLeft = scrollLeft - walk
-  }
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = 'clientX' in e ? e.clientX : e.touches[0].clientX;
+    const walk = (x - startX) * 2;
+    sliderRef.current.scrollLeft = scrollLeft - walk;
+  };
 
   return (
     <div className="relative overflow-hidden py-8">
@@ -63,12 +72,12 @@ export default function ImageSlider() {
         onTouchMove={onDrag}
       >
         {images.map((image) => (
-          <div key={image.id} className="flex-shrink-0 relative group">
+          <Link to={`/product/${image.id}`} key={image.id} className="flex-shrink-0 relative group">
             <img src={image.src} alt={image.label} className="w-48 h-72 object-cover rounded-lg" />
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
               {image.label}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
       <button
@@ -84,5 +93,7 @@ export default function ImageSlider() {
         <FaChevronRight className="text-2xl text-gray-800" />
       </button>
     </div>
-  )
-}
+  );
+};
+
+export default ImageSlider;

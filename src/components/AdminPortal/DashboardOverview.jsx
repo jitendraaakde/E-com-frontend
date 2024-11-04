@@ -1,23 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { FaBox, FaExclamationTriangle, FaDollarSign, FaPlus } from 'react-icons/fa'
 
 function DashboardOverview() {
-  const stats = [
-    { name: 'Total Products', value: 150, icon: FaBox },
-    { name: 'Out of Stock', value: 5, icon: FaExclamationTriangle },
-    { name: 'Total Revenue', value: '$15,000', icon: FaDollarSign },
-    { name: 'New Products This Week', value: 10, icon: FaPlus },
-  ]
+  const [stats, setStats] = useState([
+    { name: 'Total Products', value: 0, icon: FaBox },
+    { name: 'Total Orders', value: 0, icon: FaExclamationTriangle },
+    { name: 'Total Revenue', value: '$0', icon: FaDollarSign },
+    { name: 'New Products This Week', value: 0, icon: FaPlus },
+  ]);
 
-  const salesData = [
-    { name: 'Jan', sales: 4000 },
-    { name: 'Feb', sales: 3000 },
-    { name: 'Mar', sales: 5000 },
-    { name: 'Apr', sales: 4500 },
-    { name: 'May', sales: 6000 },
-    { name: 'Jun', sales: 5500 },
-  ]
+  const [salesData, setSalesData] = useState([]);
+
+  const fetchDashboardData = async () => {
+    try {
+      const response = await fetch('/api/admin/get-admin-dashboard-data');
+      const data = await response.json();
+
+      setStats([
+        { name: 'Total Products', value: data.stats.totalProducts, icon: FaBox },
+        { name: 'Total Orders', value: data.stats.totalOrders, icon: FaExclamationTriangle },
+        { name: 'Total Revenue', value: `$${data.stats.totalRevenue.toLocaleString()}`, icon: FaDollarSign },
+        { name: 'New Products This Week', value: data.stats.newProductsThisWeek, icon: FaPlus },
+      ]);
+
+      setSalesData(data.salesData);
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   return (
     <div className="p-6">
@@ -45,7 +60,7 @@ function DashboardOverview() {
 }
 
 function StatCard({ stat }) {
-  const Icon = stat.icon
+  const Icon = stat.icon;
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-4">
@@ -57,4 +72,4 @@ function StatCard({ stat }) {
   )
 }
 
-export default DashboardOverview
+export default DashboardOverview;

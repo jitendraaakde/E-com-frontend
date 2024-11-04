@@ -9,7 +9,7 @@ export default function Sidebar({ setActiveComponent, isOpen, setIsOpen }) {
     { name: 'All Products', icon: FaBox, action: 'allProducts' },
     { name: 'Add Product', icon: FaPlusCircle, action: 'addProduct' },
     { name: 'Orders', icon: FaShoppingBag, action: 'orders' },
-    { name: 'Users', icon: FaUsers, action: 'users' }
+    // { name: 'Users', icon: FaUsers, action: 'users' }
   ];
 
   return (
