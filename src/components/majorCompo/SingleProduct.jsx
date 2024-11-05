@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { FaHeart, FaExchangeAlt, FaShoppingCart, FaStar, FaTruck, FaUndo } from 'react-icons/fa'
+import React, { useEffect, useState } from 'react';
+import { FaHeart, FaExchangeAlt, FaShoppingCart, FaStar, FaTruck, FaUndo } from 'react-icons/fa';
 import { TiTickOutline } from "react-icons/ti";
-
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
-import { checkAlreadyInCart, SliceAddToCart } from '../../store/cartSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { checkAlreadyInCart, SliceAddToCart } from '../../store/cartSlice';
 import LoadingSpinner from '../partials/LoadingSpinner';
 import { toast } from 'react-toastify';
 
 export default function SingleProduct() {
-    const [productData, setProductData] = useState(null)
-    const [hoverImage, setHoverImage] = useState()
-    const { alreadyInCart } = useSelector(state => state.cart)
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const { id } = useParams()
-    const [loading, setLoading] = useState(true)
+    const [productData, setProductData] = useState(null);
+    const [hoverImage, setHoverImage] = useState();
+    const { alreadyInCart } = useSelector(state => state.cart);
+    const { auth: isAuthenticated } = useSelector(state => state.user);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
 
     const handleSingleProduct = async (id) => {
-        setLoading(true)
+        setLoading(true);
         try {
             const response = await fetch(`/api/product/${id}`, {
                 method: 'GET',
@@ -28,11 +28,9 @@ export default function SingleProduct() {
             });
 
             const data = await response.json();
-
             if (!response.ok) {
                 throw new Error(data.message || 'Error fetching product');
             }
-
 
             if (data.product) {
                 setProductData(data.product);
@@ -44,22 +42,23 @@ export default function SingleProduct() {
         } catch (error) {
             console.error('Fetch failed:', error.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
-
     const calculateAmount = (price, disPercent) => {
-        return Math.round(price - (price * (disPercent / 100)))
-    }
+        return Math.round(price - (price * (disPercent / 100)));
+    };
+
     const handleImageHover = (url) => {
-        setHoverImage(url)
-    }
-    const [clickSize, setClickSize] = useState(null)
+        setHoverImage(url);
+    };
+
+    const [clickSize, setClickSize] = useState(null);
 
     const handleSizeButton = (sizeObj) => {
-        setClickSize(sizeObj)
-    }
+        setClickSize(sizeObj);
+    };
 
     const addToCart = async (productId, size) => {
         try {
@@ -74,8 +73,8 @@ export default function SingleProduct() {
             const data = await response.json();
             if (response.ok) {
                 if (data.success) {
-                    dispatch(SliceAddToCart({ items: data.cart.items, totalItems: data.cart.items.length }))
-                    toast.success('Product Added to cart ')
+                    dispatch(SliceAddToCart({ items: data.cart.items, totalItems: data.cart.items.length }));
+                    toast.success('Product Added to cart');
                 }
             } else {
                 throw new Error(data.message || 'Error fetching products');
@@ -83,22 +82,28 @@ export default function SingleProduct() {
         } catch (error) {
             console.error('Fetch failed:', error.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const handleAddToCart = (product, clickSize) => {
-        if (!clickSize) {
-            toast('Please choose size before Add to Cart')
-            return
-        } else {
-            addToCart(product, clickSize)
+        if (!isAuthenticated) {
+            toast('Please login to add items to your cart');
+            navigate('/login', { state: { from: window.location.pathname } });
+            return;
         }
-    }
-    useEffect(() => {
-        handleSingleProduct(id)
-    }, [])
 
+        if (!clickSize) {
+            toast('Please choose a size before adding to cart');
+            return;
+        } else {
+            addToCart(product, clickSize);
+        }
+    };
+
+    useEffect(() => {
+        handleSingleProduct(id);
+    }, []);
     return <>
         {loading ? <LoadingSpinner /> :
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
@@ -178,7 +183,10 @@ export default function SingleProduct() {
                                             Already in cart
                                         </button>}
 
-                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-blue-400" onClick={() => navigate('/cart')}>
+                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-blue-400" onClick={() => {
+                                        handleAddToCart(productData._id, clickSize)
+                                        navigate('/cart')
+                                    }}>
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Buy now
                                     </button>

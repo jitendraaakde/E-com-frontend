@@ -1,7 +1,7 @@
 import logoImg from '../../../public/Systango_logo.png'
 
 const Footer = () => {
-    return <section className="py-10 bg-gray-900 sm:pt-16 lg:pt-24">
+    return <section className="py-8 bg-gray-900 sm:pt-12 lg:pt-12">
         <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
             <div className="grid grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-4 md:gap-x-12">
                 <div>
@@ -81,10 +81,10 @@ const Footer = () => {
                 </div>
             </div>
 
-            <hr className="mt-16 mb-10 border-gray-800" />
+            <hr className="mt-16 mb-2 border-gray-800" />
 
             <div className="flex flex-wrap items-center justify-between">
-                <img className="h-8 auto md:order-1" src={logoImg} alt="" />
+                <img className="h-10 auto md:order-1" src={logoImg} alt="" />
 
                 <ul className="flex items-center space-x-3 md:order-3">
                     <li>
@@ -130,7 +130,7 @@ const Footer = () => {
                     </li>
                 </ul>
 
-                <p className="w-full mt-8 text-sm text-center text-gray-100 md:mt-0 md:w-auto md:order-2">© Copyright 2021, All Rights Reserved by Postcraft</p>
+                <p className="w-full mt-6 text-sm text-center text-gray-100 md:mt-0 md:w-auto md:order-2">© Copyright 2021, All Rights Reserved by Postcraft</p>
             </div>
         </div>
     </section>

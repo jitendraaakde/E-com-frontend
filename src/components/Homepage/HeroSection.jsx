@@ -30,7 +30,7 @@ export default function HeroSection() {
   }
 
   return (
-    <div className="relative w-full h-[60vh] overflow-hidden">
+    <div className="relative w-full h-[50vh] overflow-hidden">
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentBanner * 100}%)` }}
@@ -38,7 +38,7 @@ export default function HeroSection() {
         {banners.map((banner) => (
           <div
             key={banner.id}
-            className="w-full h-[60vh] flex-shrink-0 relative"
+            className="w-full h-[50vh] flex-shrink-0 relative"
           >
             <img
               src={banner.image}

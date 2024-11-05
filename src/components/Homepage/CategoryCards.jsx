@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getFilterProducts } from '../../store/productSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function CategoryCards() {
   const [categoriesProduct, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const hardcodedCategoryNames = ['T-Shirt', 'Shirts', 'Jeans', 'Formal Shirts'];
 
@@ -34,6 +38,10 @@ export default function CategoryCards() {
       return [];
     }
   };
+  const navigateTo = (categoryName) => {
+    navigate(`/listings?category=${encodeURIComponent(categoryName)}`);
+  };
+
 
   const fetchCategoryProducts = async (categories) => {
     try {
@@ -76,23 +84,22 @@ export default function CategoryCards() {
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {categoriesProduct.slice(0, 4).map((category) => (
+
           <div
             key={category._id}
             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-          >
+            onClick={() => navigateTo(category.name)}>
             <h3 className="text-xl font-semibold p-4 bg-gray-100">
               {category.name}
             </h3>
             <div className="grid grid-cols-2 gap-2 p-4">
               {category.products.products.slice(0, 4).map((product, index) => (
-                <Link to={`/product/${product._id}`}>
-                  <img
-                    key={index}
-                    src={product?.images[0]?.url}
-                    alt={`${category.name} Product ${index + 1}`}
-                    className=" object-cover w-40 h-44 rounded transform hover:scale-105 transition-transform duration-300"
-                  />
-                </Link>
+                <img
+                  key={index}
+                  src={product?.images[0]?.url}
+                  alt={`${category.name} Product ${index + 1}`}
+                  className=" object-cover w-40 h-44 rounded transform hover:scale-105 transition-transform duration-300"
+                />
               ))}
             </div>
           </div>

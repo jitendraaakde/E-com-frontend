@@ -1,9 +1,7 @@
-import Filters from "../filterBarProducts"
-import FilePath from "../partials/FilePath"
-import GradLine from "../partials/GradLine"
+import Filters from "../products/filterBarProducts"
 import Products from "../products/Products"
 
-const Home = () => {
+const ListingPage = () => {
     return <>
         {/* <GradLine></GradLine> */}
         {/* <FilePath></FilePath> */}
@@ -12,4 +10,4 @@ const Home = () => {
         <Products></Products>
     </>
 }
-export default Home 
+export default ListingPage 

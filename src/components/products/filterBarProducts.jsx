@@ -6,7 +6,8 @@ import { RxSize } from "react-icons/rx";
 import { TbArrowsUpDown } from "react-icons/tb";
 import { MdOutlineBrandingWatermark } from "react-icons/md";
 import { useDispatch } from 'react-redux';
-import { getFilterProducts } from '../store/productSlice';
+import { getFilterProducts } from '../../store/productSlice';
+import { useLocation } from 'react-router-dom';
 
 const initialFilters = [
   {
@@ -47,13 +48,14 @@ function FilterDropdown({ filter, onSelect, selectedOption, openFilter, setOpenF
       <button
         onClick={() => setOpenFilter(isOpen ? null : filter.name)}
         className={`flex items-center gap-2 px-4 py-1 text-black shadow-sm
-            focus:outline-none focus:ring-offset-2
-             ${selectedOption ? 'ring-1 ring-indigo-300' : ''}`}
+      focus:outline-none focus:ring-offset-2
+      ${selectedOption ? 'ring-1 ring-indigo-300 rounded-2xl' : ''}`}
       >
         <filter.icon className="h-4 w-4" />
         {filter.name}
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
+
       {isOpen && (
         <div className="absolute z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="py-1 max-h-60 overflow-auto">
@@ -81,6 +83,16 @@ export default function Filters() {
   const [openFilter, setOpenFilter] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const fetchProductsForCategory = () => {
+    const params = new URLSearchParams(location.search);
+    const category = params.get('category');
+    if (category) {
+      const filters = { Category: category };
+      dispatch(getFilterProducts(filters));
+    }
+  }
 
   const getInitialFiltersData = async () => {
     try {
@@ -117,7 +129,8 @@ export default function Filters() {
 
   useEffect(() => {
     getInitialFiltersData();
-  }, []);
+    fetchProductsForCategory()
+  }, [location]);
 
   const handleFilterSelect = (filterName, option) => {
     setSelectedFilters(prev => ({
@@ -128,6 +141,7 @@ export default function Filters() {
   };
 
   const sendAllFiltersToBackend = async (filters) => {
+    console.log('filters', filters)
     dispatch(getFilterProducts(filters));
   };
 
@@ -148,6 +162,19 @@ export default function Filters() {
                   setOpenFilter={setOpenFilter}
                 />
               ))}
+            <div className="py-1 px-4 bg-white rounded-2xl shadow-sm border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-all duration-200">
+              <button
+                onClick={() => {
+                  setSelectedFilters({});
+                  sendAllFiltersToBackend({});
+                }}
+                className="flex items-center gap-2"
+              >
+                Reset Filter
+              </button>
+            </div>
+
+
           </div>
           {filters.some((filter) => filter.name === 'Sort By') && (
             <div>

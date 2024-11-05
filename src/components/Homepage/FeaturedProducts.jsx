@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 
 export default function FeaturedProducts({ category = 'jeans' }) {
   const [products, setProducts] = useState([]);
-
+  const calculateAmount = (price, disPercent) => {
+    return Math.round(price - (price * (disPercent / 100)))
+  }
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -14,7 +16,7 @@ export default function FeaturedProducts({ category = 'jeans' }) {
         const formattedProducts = data.products.map((product) => ({
           id: product._id,
           name: product.name,
-          price: product.price,
+          price: calculateAmount(product.price, product.discountPercentage),
           rating: product.rating,
           image: product?.images[0]?.url,
           badge: product.badge || 'Featured',
@@ -43,13 +45,10 @@ export default function FeaturedProducts({ category = 'jeans' }) {
                 </span>
               </div>
               <div className="p-4">
-                <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+                <h3 className="text-lg font-semibold mb-2 text-ellipsis whitespace-nowrap overflow-hidden ">{product.name}</h3>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-xl font-bold">${product.price.toFixed(2)}</span>
-                  <div className="flex items-center">
-                    <FaStar className="text-yellow-400 mr-1" />
-                    <span>{product.rating}</span>
-                  </div>
+
                 </div>
                 <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center">
                   <FaShoppingCart className="mr-2" />

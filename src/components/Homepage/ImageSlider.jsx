@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const ImageSlider = () => {
   const sliderRef = useRef(null);
@@ -8,13 +8,14 @@ const ImageSlider = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [images, setImages] = useState([]);
-
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch('/api/product/products?category=Shirts');
         const data = await response.json();
         const formattedImages = data.products.map((product) => ({
+          categoryName: 'Shirts',
           id: product._id,
           src: product.images[0]?.url,
           label: product.name,
@@ -27,6 +28,10 @@ const ImageSlider = () => {
 
     fetchProducts();
   }, []);
+
+  const navigateTo = (categoryName) => {
+    navigate(`/listings?category=${encodeURIComponent(categoryName)}`);
+  };
 
   const scroll = (direction) => {
     if (sliderRef.current) {
@@ -72,12 +77,12 @@ const ImageSlider = () => {
         onTouchMove={onDrag}
       >
         {images.map((image) => (
-          <Link to={`/product/${image.id}`} key={image.id} className="flex-shrink-0 relative group">
+          <div onClick={() => navigateTo(image.categoryName)} key={image.id} className="flex-shrink-0 relative group">
             <img src={image.src} alt={image.label} className="w-48 h-72 object-cover rounded-lg" />
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
               {image.label}
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       <button

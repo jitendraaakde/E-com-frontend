@@ -14,74 +14,46 @@ import AdminDashboard from './components/AdminPortal/AdminDashboard';
 import OrderHistory from './components/UserProfile/OrderHistory';
 import UserProfilePortal from './components/UserProfile/UserProfilePortal';
 import ContactUs from './components/majorCompo/ContactUs';
-import Home from './components/majorCompo/Home';
 import HomePage from './components/Homepage/HomePage';
-import Example from './components/example';
 import Checkout from './components/majorCompo/Checkout';
 import PaymentPage from './components/majorCompo/PaymentPage';
 import OrderConfirmation from './components/majorCompo/OrderConfirmed';
-// import { Toaster } from 'sonner'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ListingPage from './components/majorCompo/ListingPage';
+import ProtectedRoute from './components/ProtectedRoute';
+
+
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
     children: [
-      {
-        path: '/',
-        element: <Home />,
-      }, {
-        path: '/register', element: <Signup />
-      },
-      {
-        path: '/home', element: <HomePage />
-      },
-      {
-        path: '/checkout', element: <Checkout />
-      },
-      {
-        path: '/login', element: <Login />
-      }, {
-        path: '/product/:id', element: <SingleProduct />
-      }, {
-        path: '/cart', element: <Cart />
-      }
-      , {
-        path: '/order-history', element: <OrderHistory />
-      }
-      , {
-        path: '/admin-portal', element: <AdminDashboard />
-      }
-      , {
-        path: '/profile', element: <UserProfilePortal />
-      }
-      , {
-        path: '/contact', element: <ContactUs />
-      }, {
-        path: '/example', element: <Example />
+      { path: '/', element: <HomePage /> },
+      { path: '/register', element: <Signup /> },
+      { path: '/listings', element: <ListingPage /> },
+      { path: '/login', element: <Login /> },
+      { path: '/product/:id', element: <SingleProduct /> },
+      { path: '/contact', element: <ContactUs /> },
+      { path: '/payment', element: <PaymentPage /> },
+      { path: '/order-confirmed', element: <OrderConfirmation /> },
 
-      },
-      {
-        path: '/payment', element: <PaymentPage />
-      },
-      {
-        path: '/order-confirmed', element: <OrderConfirmation />
-      },
-
+      { path: '/checkout', element: <ProtectedRoute><Checkout /></ProtectedRoute> },
+      { path: '/cart', element: <ProtectedRoute><Cart /></ProtectedRoute> },
+      { path: '/order-history', element: <ProtectedRoute><OrderHistory /></ProtectedRoute> },
+      { path: '/admin-portal', element: <ProtectedRoute><AdminDashboard /></ProtectedRoute> },
+      { path: '/profile', element: <ProtectedRoute><UserProfilePortal /></ProtectedRoute> },
     ]
   },
 ]);
-
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <RouterProvider router={router} />
-        {/* <Toaster position="top-right" richColors /> */}
-        <ToastContainer />
+        <ToastContainer autoClose={1500} />
       </PersistGate>
     </Provider>
   </StrictMode>

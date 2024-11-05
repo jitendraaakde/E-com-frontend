@@ -2,11 +2,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../store/userSlice";
 import { Link } from "react-router-dom";
 import GAuth from "../partials/GAuth";
-import { useState } from "react";
+import { useEffect } from "react";
 import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isAuthenticated = useSelector((state) => state.user.auth);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -26,12 +31,19 @@ const Login = () => {
             if (!response.ok) {
                 throw new Error(data.message || `Error: ${response.statusText}`);
             }
-            toast.success(data.message)
+            toast.success(data.message);
             dispatch(loginUser(data.user));
+
         } catch (error) {
             console.error('Login failed:', error.message);
         }
     };
+    useEffect(() => {
+        if (isAuthenticated) {
+            const redirectPath = location.state?.from?.pathname || '/';
+            navigate(redirectPath, { replace: true });
+        }
+    }, [isAuthenticated, navigate, location]);
 
 
     return (

@@ -7,7 +7,7 @@ export default function Product({ product }) {
     return Math.round(price - (price * (disPercent / 100)))
   }
   return (
-    <Link to={`product/${product._id}`}>
+    <Link to={`/product/${product._id}`}>
       <div className={`border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col`}>
         <div className={`relative w-full aspect-square`}>
           <img

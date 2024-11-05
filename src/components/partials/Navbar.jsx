@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { CiSearch, CiUser } from 'react-icons/ci'
 import { LuShoppingCart } from 'react-icons/lu'
 import { HiMenu, HiX } from 'react-icons/hi'
@@ -10,6 +10,8 @@ import { SliceAddToCart } from '../../store/cartSlice'
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const cart = useSelector(state => state.cart)
+    const user = useSelector(state => state.user)
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const getCartItems = async () => {
         try {
@@ -39,6 +41,14 @@ export default function Navbar() {
         getCartItems()
     }, [])
 
+    const checkAuth = (url) => {
+        if (user != {}) {
+            navigate(url)
+        } else {
+            navigate('login')
+        }
+    }
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -59,19 +69,30 @@ export default function Navbar() {
 
                     <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                         <NavLink to="/">Home</NavLink>
-                        <NavLink to="/register">Signup</NavLink>
-                        <NavLink to="/login">Login</NavLink>
-                        <NavLink to="/product/670f61c3d261f687315cb803">Single Product</NavLink>
-                        <NavLink to="/cart">Cart</NavLink>
-                        <NavLink to="/order-history">Order History</NavLink>
-                        <NavLink to="/admin-portal">Admin Portal</NavLink>
-                        <NavLink to="/profile">Profile</NavLink>
-                        <NavLink to="/contact">contact</NavLink>
+                        <NavLink to="/listings?category=Shirts">Men</NavLink>
+                        <NavLink to="listings?category=T-Shirt">T-Shirts</NavLink>
+                        <NavLink to="listings?category=Jeans">Jeans</NavLink>
+                        <NavLink to="listings?category=Kurta">Kurta</NavLink>
+                        <NavLink to="/contact">Contact</NavLink>
+                        <NavLink to="/about">About</NavLink>
                     </div>
 
                     <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-                        <NavIcon to="/search" icon={CiSearch} text="Search" />
-                        <NavIcon to="/profile" icon={CiUser} text="Account" />
+                        <Link
+                            to={'/order-history'}
+                            className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                        >
+                            Orders
+
+                        </Link>
+                        <Link
+                            to={'/profile'}
+                            className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                        >
+                            <CiUser className="h-5 w-5"></CiUser>
+
+                        </Link>
+
                         <Link
                             to={'/cart'}
                             className="flex items-center text-gray-500 hover:text-gray-700 transition-colors duration-200"
@@ -106,7 +127,7 @@ export default function Navbar() {
             {isMenuOpen && (
                 <div className="sm:hidden">
                     <div className="pt-2 pb-3 space-y-1">
-                        <MobileNavLink to="/shop">Shops</MobileNavLink>
+                        <MobileNavLink to="/listings">Shops</MobileNavLink>
                         <MobileNavLink to="/about">About us</MobileNavLink>
                         <MobileNavLink to="/stores">Our Stores</MobileNavLink>
                         <MobileNavLink to="/contact">Contact us</MobileNavLink>

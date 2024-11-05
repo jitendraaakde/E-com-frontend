@@ -11,6 +11,7 @@ const productSlice = createSlice({
             state.productList = action.payload;
         },
         getFilterProducts: (state, action) => {
+            console.log('filter product called', state, action)
             state.filters = action.payload
         }
     },

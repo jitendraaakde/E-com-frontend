@@ -421,13 +421,11 @@ function LogoutUser() {
                     'Content-Type': 'application/json',
                 },
             });
-
             const data = await response.json();
-
             if (response.ok) {
                 await persistor.purge();
-
                 navigate('/');
+                window.location.reload();
             } else {
                 throw new Error(data.message || 'Error logging out');
             }
