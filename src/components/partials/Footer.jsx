@@ -130,10 +130,20 @@ const Footer = () => {
                     </li>
                 </ul>
 
-                <p className="w-full mt-6 text-sm text-center text-gray-100 md:mt-0 md:w-auto md:order-2">© Copyright 2021, All Rights Reserved by Postcraft</p>
+                <p className="w-full mt-6 text-sm text-center text-gray-100 md:mt-0 md:w-auto md:order-2">© Copyright 2024, Designed by Jitendra Aakde</p>
             </div>
         </div>
     </section>
 
+}
+function NavLink({ to, children }) {
+    return (
+        <Link
+            to={to}
+            className="text-gray-500 hover:text-gray-700 px-3 py-2 text-sm font-medium transition-colors duration-200"
+        >
+            {children}
+        </Link>
+    )
 }
 export default Footer

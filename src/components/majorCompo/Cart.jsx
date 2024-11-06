@@ -152,7 +152,7 @@ const CartComponent = () => {
                             ))}
                         </div>
                     </div>
-                    <div className="lg:w-1/3">
+                    {items.length !== 0 && <div className="lg:w-1/3">
                         <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
                             <div className="space-y-4">
@@ -188,7 +188,8 @@ const CartComponent = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>}
+
                 </div>
             </div>
         </div>

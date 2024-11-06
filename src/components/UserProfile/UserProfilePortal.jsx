@@ -3,12 +3,13 @@ import { FaLock, FaUser, FaBox, FaSignOutAlt, FaRegAddressCard } from 'react-ico
 import Addresses from './Addresses'
 import { IoLogOut } from "react-icons/io5";
 import OrderHistory from './OrderHistory';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RiEditBoxLine } from "react-icons/ri";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { persistor } from '../../store';
 import { useNavigate } from 'react-router-dom';
-
+import { loginUser } from '../../store/userSlice';
+import { toast } from 'react-toastify';
 
 export default function UserProfilePortal() {
     const [activeTab, setActiveTab] = useState('profile')
@@ -73,6 +74,7 @@ export default function UserProfilePortal() {
 
 function ProfileContent() {
     const { user } = useSelector((store) => store.user);
+    const dispatch = useDispatch()
     const [editable, setEditable] = useState(true)
     const handleEditable = () => {
         setEditable(!editable)
@@ -95,9 +97,12 @@ function ProfileContent() {
             });
 
             const data = await response.json();
+            console.log('data.user', data.user)
             if (!response.ok) {
                 throw new Error(data.message || `Error: ${response.statusText}`);
             }
+            dispatch(loginUser(data.user))
+            toast.success("Details updated")
         } catch (error) {
             console.error('Edit failed:', error.message);
         }
@@ -156,7 +161,6 @@ function ProfileContent() {
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 px-2 py-3 border-2"
                             placeholder="+91 xxxxxxxxxxx"
                             disabled={editable}
-
                         />
                     </div>
 
@@ -239,7 +243,6 @@ function ChangePasswordContent() {
         }));
     };
 
-    // Check if passwords match and all fields are valid
     const isFormValid = () => {
         return (
             currentPassword &&
@@ -366,6 +369,7 @@ function DeleteAccountContent() {
             if (data.success) {
                 await persistor.purge();
 
+                window.location.reload();
                 navigate('/');
             } else {
                 navigate('/login');
@@ -424,8 +428,9 @@ function LogoutUser() {
             const data = await response.json();
             if (response.ok) {
                 await persistor.purge();
-                navigate('/');
+
                 window.location.reload();
+                navigate('/');
             } else {
                 throw new Error(data.message || 'Error logging out');
             }

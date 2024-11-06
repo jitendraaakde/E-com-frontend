@@ -8,13 +8,14 @@ export default function OrderConfirmation() {
   const { ordersData } = useSelector(state => state.orders)
   const orderNumber = "12345"
   const estimatedDelivery = "May 15, 2024"
-  const subtotal = ordersData.products.reduce((acc, item) => acc + item.amount * item.quantity, 0)
-  const tax = subtotal * 0.1
-  const shipping = 9.99
+  let subtotal = 0;
+  subtotal = ordersData.products.reduce((acc, item) => acc + item.amount * item.quantity, 0)
+  const tax = subtotal * 0.03;
+  const shipping = 120
   const total = subtotal + tax + shipping
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col justify-center items-center p-4 animate-slide-up">
       <div className="w-full max-w-3xl">
         <div className="bg-white/90 backdrop-blur-md shadow-2xl rounded-lg overflow-hidden bg-gradient-to-br from-purple-300 via-pink-300 to-red-300">
           <div className="text-center p-6">

@@ -1,3 +1,4 @@
+import GradLine from "../partials/GradLine"
 import Filters from "../products/filterBarProducts"
 import Products from "../products/Products"
 

@@ -27,12 +27,17 @@ const Login = () => {
             });
 
             const data = await response.json();
-
-            if (!response.ok) {
+            if (response.ok) {
+                if (data.success) {
+                    toast.success(data.message);
+                    dispatch(loginUser(data.user));
+                    navigate('/')
+                } else {
+                    navigate('/register')
+                }
+            } else {
                 throw new Error(data.message || `Error: ${response.statusText}`);
             }
-            toast.success(data.message);
-            dispatch(loginUser(data.user));
 
         } catch (error) {
             console.error('Login failed:', error.message);

@@ -22,6 +22,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ListingPage from './components/majorCompo/ListingPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import About from './components/majorCompo/About';
 
 
 
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: '/contact', element: <ContactUs /> },
       { path: '/payment', element: <PaymentPage /> },
       { path: '/order-confirmed', element: <OrderConfirmation /> },
+      { path: '/about', element: <About /> },
 
       { path: '/checkout', element: <ProtectedRoute><Checkout /></ProtectedRoute> },
       { path: '/cart', element: <ProtectedRoute><Cart /></ProtectedRoute> },

@@ -80,7 +80,12 @@ export default function Checkout() {
 
       const data = await response.json();
       if (response.ok) {
-        initialAddressesFetch();
+        setAddresses((prevAddresses) =>
+          prevAddresses.filter((address) => address._id !== id)
+        );
+        if (selectedAddress?._id === id) {
+          setSelectedAddress(null);
+        }
       } else {
         throw new Error(data.message || 'Error deleting address');
       }
@@ -160,6 +165,9 @@ function OrderSummary({ products, subtotal, shipping, tax, total, selectedAddres
     dispatch(addShippingAddress(selectedAddress))
     navigate('/payment');
   };
+  const calculateAmount = (price, disPercent) => {
+    return Math.round(price - (price * (disPercent / 100)))
+  }
   return (<>
     <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>
     <div className="bg-white rounded-lg p-6 shadow-md">
@@ -169,7 +177,7 @@ function OrderSummary({ products, subtotal, shipping, tax, total, selectedAddres
             <img src={product.productId.images[0].url} className="w-20 h-28 object-cover rounded-md mr-4" />
             <div>
               <h3 className="font-bold text-indigo-800">{product.productId.name}</h3>
-              <p className="text-indigo-600">${product.productId.price.toFixed(2)}</p>
+              <p className="text-indigo-600">₹{calculateAmount(product.productId.price, product.productId.discountPercentage).toFixed(2)} </p>
             </div>
           </div>
         ))}
@@ -191,19 +199,19 @@ function SummaryDetails({ subtotal, shipping, tax, total }) {
     <div className="border-t border-gray-200 pt-4">
       <div className="flex justify-between mb-2 text-gray-600">
         <span>Subtotal</span>
-        <span>${subtotal.toFixed(2)}</span>
+        <span>₹{subtotal.toFixed(2)}</span>
       </div>
       <div className="flex justify-between mb-2 text-gray-600">
         <span>Tax</span>
-        <span>${tax.toFixed(2)}</span>
+        <span>₹{tax.toFixed(2)}</span>
       </div>
       <div className="flex justify-between mb-2 text-gray-600">
         <span>Delivery Charge</span>
-        <span>${shipping.toFixed(2)}</span>
+        <span>₹{shipping.toFixed(2)}</span>
       </div>
       <div className="flex justify-between font-bold mt-4 text-xl text-indigo-800">
         <span>Total</span>
-        <span>${total.toFixed(2)}</span>
+        <span>₹{total.toFixed(2)}</span>
       </div>
     </div>
   );
@@ -226,6 +234,7 @@ function AddressForm({ onSubmit, initialData, onClose }) {
   };
 
   const handleSubmit = (e) => {
+    handleRemoveData()
     e.preventDefault();
     onSubmit(formData);
     setFormData({

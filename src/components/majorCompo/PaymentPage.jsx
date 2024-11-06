@@ -96,7 +96,7 @@ export default function PaymentPage() {
                 <h3 className="font-medium text-purple-700">{product.productId.name}</h3>
                 <p className="text-sm text-purple-500">Quantity: {product.quantity}</p>
               </div>
-              <p className="font-semibold text-indigo-600">${product.productId.price.toFixed(2)}</p>
+              <p className="font-semibold text-indigo-600">₹{product.productId.price.toFixed(2)}</p>
             </div>
           ))}
         </div>
@@ -104,20 +104,20 @@ export default function PaymentPage() {
         <div className="space-y-2 text-purple-800">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>₹{subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Tax</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>₹{tax.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Delivery Charge</span>
-            <span>${shipping.toFixed(2)}</span>
+            <span>₹{shipping.toFixed(2)}</span>
           </div>
           <hr className="my-2 border-purple-200" />
           <div className="flex justify-between font-bold text-lg text-indigo-700">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>₹{total.toFixed(2)}</span>
           </div>
         </div>
       </div>
