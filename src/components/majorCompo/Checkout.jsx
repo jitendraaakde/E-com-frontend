@@ -103,8 +103,8 @@ export default function Checkout() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-1/2">
-            <h2 className="text-2xl font-bold mb-4 text-slate-800">Delivery Address</h2>
-            <div className="bg-white rounded-lg p-6 shadow-md">
+            <h2 className="text-2xl font-bold mb-4 text-cyan-800">Delivery Address</h2>
+            {addresses.length !== 0 && <div className="bg-white rounded-lg p-6 shadow-md">
               {addresses.map((address) => (
                 <div className="flex items-center justify-between mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50" key={address._id}>
                   <label className="flex items-center cursor-pointer flex-grow">
@@ -114,24 +114,24 @@ export default function Checkout() {
                       value={address._id}
                       checked={selectedAddress === address}
                       onChange={() => setSelectedAddress(address)}
-                      className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                      className="mr-2 text-cyan-800 focus:ring-indigo-500"
                     />
-                    <span className="text-gray-700">
+                    <span className="text-cyan-800">
                       {address.type}, {address.street}, {address.city}, {address.state} {address.zipCode}
                     </span>
                   </label>
                   <div>
-                    <button onClick={() => handleEditAddress(address)} className="text-indigo-600 hover:text-indigo-800 mr-2">
+                    <button onClick={() => handleEditAddress(address)} className="text-cyan-800 hover:text-cyan-600 mr-2">
                       <Edit size={18} />
                     </button>
-                    <button onClick={() => handleDeleteAddress(address._id)} className="text-red-600 hover:text-red-800">
+                    <button onClick={() => handleDeleteAddress(address._id)} className="text-cyan-800 hover:text-red-800">
                       <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
               ))}
-            </div>
-            <button onClick={handleAddAddressClick} className="w-full mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
+            </div>}
+            <button onClick={handleAddAddressClick} className="w-full mt-4 bg-cyan-800 text-white py-2 px-4 rounded-md hover:bg-cyan-600 transition-colors">
               + Add New Address
             </button>
           </div>
@@ -169,22 +169,22 @@ function OrderSummary({ products, subtotal, shipping, tax, total, selectedAddres
     return Math.round(price - (price * (disPercent / 100)))
   }
   return (<>
-    <h2 className="text-2xl font-bold mb-4 text-slate-800">Order Summary</h2>
+    <h2 className="text-2xl font-bold mb-4 text-cyan-800">Order Summary</h2>
     <div className="bg-white rounded-lg p-6 shadow-md">
       <div className="max-h-64 overflow-y-auto mb-4">
         {products.map((product) => (
           <div className="flex items-center mb-4 p-3 rounded-lg transition-colors hover:bg-gray-50" key={product.productId._id}>
             <img src={product.productId.images[0].url} className="w-20 h-28 object-cover rounded-md mr-4" />
             <div>
-              <h3 className="font-bold text-indigo-800">{product.productId.name}</h3>
-              <p className="text-indigo-600">₹{calculateAmount(product.productId.price, product.productId.discountPercentage).toFixed(2)} </p>
+              <h3 className="font-bold  text-cyan-800">{product.productId.name}</h3>
+              <p className="text-cyan-800">₹{calculateAmount(product.productId.price, product.productId.discountPercentage).toFixed(2)} </p>
             </div>
           </div>
         ))}
       </div>
       <SummaryDetails subtotal={subtotal} shipping={shipping} tax={tax} total={total} />
 
-      <button onClick={handlePlaceOrder} className="w-full mt-4 bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition-colors text-lg font-semibold flex items-center justify-center">
+      <button onClick={handlePlaceOrder} className="w-full mt-4  bg-cyan-800 text-white py-3 px-4 rounded-md hover:bg-cyan-600 transition-colors text-lg font-semibold flex items-center justify-center">
         <ShoppingBag className="mr-2" size={24} />
         Place Order
       </button>
@@ -209,7 +209,7 @@ function SummaryDetails({ subtotal, shipping, tax, total }) {
         <span>Delivery Charge</span>
         <span>₹{shipping.toFixed(2)}</span>
       </div>
-      <div className="flex justify-between font-bold mt-4 text-xl text-indigo-800">
+      <div className="flex justify-between font-bold mt-4 text-xl text-cyan-800">
         <span>Total</span>
         <span>₹{total.toFixed(2)}</span>
       </div>
@@ -256,12 +256,12 @@ function AddressForm({ onSubmit, initialData, onClose }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
       <div className="bg-white p-8 rounded-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4 text-indigo-800">
+        <h2 className="text-2xl font-bold mb-4 text-cyan-800">
           {initialData ? 'Edit Address' : 'Add New Address'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="street" className="block text-sm font-medium text-indigo-600">
+            <label htmlFor="street" className="block text-sm font-medium text-cyan-800">
               Street
             </label>
             <input
@@ -270,11 +270,11 @@ function AddressForm({ onSubmit, initialData, onClose }) {
               value={formData.street}
               onChange={handleChange}
               required
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-2 p-2"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-indigo-500 border-2 p-2"
             />
           </div>
           <div>
-            <label htmlFor="city" className="block text-sm font-medium text-indigo-600">
+            <label htmlFor="city" className="block text-sm font-medium text-cyan-800">
               City
             </label>
             <input
@@ -288,7 +288,7 @@ function AddressForm({ onSubmit, initialData, onClose }) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="state" className="block text-sm font-medium text-indigo-600">
+              <label htmlFor="state" className="block text-sm font-medium text-cyan-800">
                 State
               </label>
               <input
@@ -301,7 +301,7 @@ function AddressForm({ onSubmit, initialData, onClose }) {
               />
             </div>
             <div>
-              <label htmlFor="country" className="block text-sm font-medium text-indigo-600">
+              <label htmlFor="country" className="block text-sm font-medium text-cyan-800">
                 Country
               </label>
               <input
@@ -316,7 +316,7 @@ function AddressForm({ onSubmit, initialData, onClose }) {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label htmlFor="zipCode" className="block text-sm font-medium text-indigo-600">
+              <label htmlFor="zipCode" className="block text-sm font-medium text-cyan-800">
                 ZIP Code
               </label>
               <input
@@ -337,9 +337,9 @@ function AddressForm({ onSubmit, initialData, onClose }) {
                     value={type}
                     checked={formData.type === type}
                     onChange={handleChange}
-                    className="text-indigo-600 focus:ring-indigo-500"
+                    className="text-cyan-800 bg-cyan-800"
                   />
-                  <label className="ml-2">{type}</label>
+                  <label className="ml-2 text-cyan-800">{type}</label>
                 </div>
               ))}
             </div>
@@ -351,13 +351,13 @@ function AddressForm({ onSubmit, initialData, onClose }) {
             <button
               type="button"
               onClick={handleRemoveData}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              className="px-4 py-2 bg-cyan-800 text-white  rounded-md hover:bg-cyan-600 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              className="px-4 py-2 bg-cyan-800 text-white rounded-md hover:bg-cyan-600 transition-colors"
             >
               {initialData ? 'Update Address' : 'Save Address'}
             </button>

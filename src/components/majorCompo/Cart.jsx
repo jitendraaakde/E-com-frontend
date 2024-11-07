@@ -75,7 +75,7 @@ const CartComponent = () => {
     return (
         <div className="min-h-screen bg-gray-100 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">{items.length !== 0 ? 'Your Shopping Cart' : "Your Cart is Empty"}</h1>
+                <h1 className="text-3xl font-bold mb-8 text-cyan-900">{items.length !== 0 ? 'Your Shopping Cart' : "Your Cart is Empty"}</h1>
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="lg:w-2/3">
                         <div className="h-[calc(100vh-200px)] pr-4 overflow-y-auto">
@@ -95,7 +95,7 @@ const CartComponent = () => {
                                         <div className="ml-6 flex-1">
                                             <Link to={`/product/${item.productId._id}`}>
 
-                                                <h3 className="text-lg font-semibold text-gray-900"
+                                                <h3 className="text-lg font-semibold  text-cyan-900"
                                                 >
                                                     {item.productId.name}
                                                 </h3>
@@ -104,7 +104,7 @@ const CartComponent = () => {
                                             <p className="text-lg font-medium text-gray-900 mt-2 space-x-2">
                                                 ₹{calculateAmount(item.productId.price, item.productId.discountPercentage) * item.quantity}
                                                 <span className="text-gray-500 line-through ml-2">₹{item.productId.price}</span>
-                                                <span className="text-green-600">{item.productId.discountPercentage}% off</span>
+                                                <span className=" text-cyan-800">{item.productId.discountPercentage}% off</span>
                                             </p>
                                             <div className="flex items-center mt-2 space-x-4">
                                                 <div className="flex items-center space-x-2">
@@ -174,7 +174,7 @@ const CartComponent = () => {
                                     <span>₹{total.toFixed(2)}</span>
                                 </div>
                             </div>
-                            <button className="w-full mt-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
+                            <button className="w-full mt-6 bg-cyan-800  text-white font-semibold py-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
                                 <Link to={'/checkout'}>Proceed to Checkout</Link>
                             </button>
                             <div className="mt-6 space-y-4">

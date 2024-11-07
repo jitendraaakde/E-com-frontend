@@ -137,7 +137,7 @@ export default function SingleProduct() {
                         <div className="lg:w-1/2 p-6 lg:p-9 flex flex-col justify-between ">
                             <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-primary">{productData?.brand?.name}</h2>
+                                    <h2 className="text-2xl font-bold text-primary text-cyan-700">{productData?.brand?.name}</h2>
                                     <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-800 mt-1">{productData?.name}</h1>
 
                                 </div>
@@ -149,7 +149,7 @@ export default function SingleProduct() {
                                 <div className="flex items-center space-x-4">
                                     <span className="text-3xl lg:text-4xl font-bold text-primary">₹{calculateAmount(productData.price, productData.discountPercentage)}</span>
                                     <span className="text-xl lg:text-2xl text-gray-500 line-through">₹{productData.price}</span>
-                                    <span className="text-sm lg:text-base font-semibold text-green-500 bg-green-100 px-3 py-1 rounded-full">
+                                    <span className="text-sm lg:text-base font-semibold text-white bg-cyan-600 px-3 py-1 rounded-full">
                                         {productData.discountPercentage}% OFF
                                     </span>
                                 </div>
@@ -160,7 +160,7 @@ export default function SingleProduct() {
                                         {productData.sizes.map((size) => (
                                             <button
                                                 key={size.size} onClick={() => handleSizeButton(size)}
-                                                className={`w-12 h-12 border-2 border-gray-300 rounded-full flex items-center justify-center text-base font-medium hover:border-primary hover:bg-primary hover:text-red-500 transition-colors duration-300 ${clickSize?.size === size.size && 'hover:text-white bg-blue-400 text-white'}`}
+                                                className={`w-12 h-12 border-2 border-gray-300 rounded-full flex items-center justify-center text-base font-medium hover:border-primary hover:bg-primary hover:text-red-500 transition-colors duration-300 ${clickSize?.size === size.size && 'hover:text-white bg-cyan-600 text-white'}`}
                                             >
                                                 {size.size}
                                             </button>
@@ -183,9 +183,11 @@ export default function SingleProduct() {
                                             Already in cart
                                         </button>}
 
-                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-black font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-blue-400" onClick={() => {
+                                    <button className="flex-1 bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-full transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 shadow-lg border bg-cyan-600" onClick={() => {
                                         handleAddToCart(productData._id, clickSize)
-                                        navigate('/cart')
+                                        if (clickSize) {
+                                            navigate('/cart')
+                                        }
                                     }}>
                                         <FaShoppingCart className="inline-block mr-2" />
                                         Buy now

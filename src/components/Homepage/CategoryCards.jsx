@@ -89,7 +89,7 @@ export default function CategoryCards() {
             key={category._id}
             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
             onClick={() => navigateTo(category.name)}>
-            <h3 className="text-xl font-semibold p-4 bg-gray-100">
+            <h3 className="text-xl font-semibold p-4 bg-gray-200">
               {category.name}
             </h3>
             <div className="grid grid-cols-2 gap-2 p-4">

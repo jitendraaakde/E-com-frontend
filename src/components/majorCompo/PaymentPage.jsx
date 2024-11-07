@@ -36,6 +36,7 @@ export default function PaymentPage() {
       });
 
       const data = await response.json();
+      console.log('Place order', data)
       if (!response.ok) {
         throw new Error(data.message || 'Failed to place order');
       } else {
@@ -84,7 +85,7 @@ export default function PaymentPage() {
 
   const renderOrderSummary = () => (
     <>
-      <h2 className="text-2xl font-bold mb-4 text-purple-800">Order Summary</h2>
+      <h2 className="text-2xl font-bold mb-4 text-cyan-800">Order Summary</h2>
       <div className="bg-white p-6 rounded-lg shadow-lg border border-purple-100">
         <div className="space-y-4 mb-6">
           {products.map((product) => (
@@ -93,15 +94,15 @@ export default function PaymentPage() {
                 <img src={product.productId.images[0].url} alt={product.productId.name} layout="fill" objectFit="cover" className="transition-transform duration-300 hover:scale-110" />
               </div>
               <div className="flex-1">
-                <h3 className="font-medium text-purple-700">{product.productId.name}</h3>
-                <p className="text-sm text-purple-500">Quantity: {product.quantity}</p>
+                <h3 className="font-medium text-cyan-900">{product.productId.name}</h3>
+                <p className="text-sm text-cyan-800">Quantity: {product.quantity}</p>
               </div>
-              <p className="font-semibold text-indigo-600">₹{product.productId.price.toFixed(2)}</p>
+              <p className="font-semibold text-cyan-600">₹{product.productId.price.toFixed(2)}</p>
             </div>
           ))}
         </div>
         <hr className="my-4 border-purple-200" />
-        <div className="space-y-2 text-purple-800">
+        <div className="space-y-2 text-cyan-800">
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span>₹{subtotal.toFixed(2)}</span>
@@ -115,7 +116,7 @@ export default function PaymentPage() {
             <span>₹{shipping.toFixed(2)}</span>
           </div>
           <hr className="my-2 border-purple-200" />
-          <div className="flex justify-between font-bold text-lg text-indigo-700">
+          <div className="flex justify-between font-bold text-lg text-cyan-700">
             <span>Total</span>
             <span>₹{total.toFixed(2)}</span>
           </div>
@@ -125,7 +126,7 @@ export default function PaymentPage() {
   )
 
   const renderPaymentOptions = () => (<>
-    <h2 className="text-2xl font-bold mb-4 text-indigo-800">Payment Method</h2>
+    <h2 className="text-2xl font-bold mb-4 text-cyan-800">Payment Method</h2>
     <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-lg shadow-lg border border-indigo-100">
       <div className="space-y-4">
         {[
@@ -141,11 +142,11 @@ export default function PaymentPage() {
               value={value}
               checked={paymentMethod === value}
               onChange={() => setPaymentMethod(value)}
-              className="text-purple-600 focus:ring-purple-500"
+              className="text-cyan-600 focus:ring-purple-500"
             />
             <label htmlFor={value} className="flex items-center space-x-2 cursor-pointer w-full">
-              <Icon className="h-5 w-5 text-indigo-600" />
-              <span className="text-purple-700">{label}</span>
+              <Icon className="h-5 w-5 text-cyan-800" />
+              <span className="text-cyan-700">{label}</span>
             </label>
           </div>
         ))}
@@ -160,8 +161,8 @@ export default function PaymentPage() {
           </div>
           <input type="text" placeholder="Name on Card" className="w-full p-2 border border-indigo-200 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           <div className="flex items-center space-x-2">
-            <input type="checkbox" id="saveCard" className="text-purple-600 focus:ring-purple-500" />
-            <label htmlFor="saveCard" className="text-purple-700">Save card for future payments</label>
+            <input type="checkbox" id="saveCard" className="text-cyan-600 focus:ring-purple-500" />
+            <label htmlFor="saveCard" className="text-cyan-700">Save card for future payments</label>
           </div>
         </div>
       )}
@@ -185,10 +186,10 @@ export default function PaymentPage() {
 
       <hr className="my-6 border-indigo-200" />
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-indigo-800">Billing Address</h3>
+        <h3 className="text-lg font-semibold mb-2 text-cyan-800">Billing Address</h3>
         <div className="flex justify-between items-center bg-white p-3 rounded-md shadow-sm">
-          <p className="text-sm text-purple-700">{address.street}, {address.city}, {address.state} {address.zipCode}</p>
-          <p className="text-sm text-purple-700">Type: {address.type}</p>
+          <p className="text-sm text-cyan-700">{address.street}, {address.city}, {address.state} {address.zipCode}</p>
+          <p className="text-sm text-cyan-700">Type: {address.type}</p>
 
         </div>
 
@@ -219,18 +220,18 @@ export default function PaymentPage() {
         )}
       </div> */}
 
-      <button onClick={handlePlaceOrder} className="w-full py-4 px-6 text-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
+      <button onClick={handlePlaceOrder} className="w-full py-4 px-6 text-lg bg-cyan-800 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105">
         Place Order
       </button>
 
-      <div className="mt-4 space-y-2 text-sm text-indigo-600">
+      <div className="mt-4 space-y-2 text-sm text-cyan-600">
         <p className="flex items-center">
           <Clock className="h-4 w-4 mr-2" />
           Expected delivery: 3-5 business days
         </p>
         <p className="flex items-center">
           <Phone className="h-4 w-4 mr-2" />
-          Need help? <a href="#" className="text-purple-600 hover:underline ml-1">Contact customer support</a>
+          Need help? <a href="#" className="text-cyan-600 hover:underline ml-1">Contact customer support</a>
         </p>
       </div>
     </div>

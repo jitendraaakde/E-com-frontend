@@ -27,22 +27,25 @@ const Login = () => {
             });
 
             const data = await response.json();
+
             if (response.ok) {
                 if (data.success) {
                     toast.success(data.message);
                     dispatch(loginUser(data.user));
-                    navigate('/')
+                    navigate('/');
                 } else {
-                    navigate('/register')
+                    toast.error(data.message);
                 }
             } else {
-                throw new Error(data.message || `Error: ${response.statusText}`);
+                toast.error(data.message || `Error: ${response.statusText}`);
+                navigate('/register');
             }
-
         } catch (error) {
             console.error('Login failed:', error.message);
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     useEffect(() => {
         if (isAuthenticated) {
             const redirectPath = location.state?.from?.pathname || '/';

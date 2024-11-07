@@ -218,6 +218,7 @@ function ChangePasswordContent() {
             });
 
             const data = await response.json();
+            console.log('Password change', data)
         } catch (error) {
             console.error('Fetch failed:', error.message);
         }
