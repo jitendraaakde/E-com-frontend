@@ -83,7 +83,7 @@ const Profile = () => {
                 <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
                     <h2 className="text-xl font-bold leading-tight text-black sm:text-2xl">Sign up</h2>
                     <p className="mt-2 text-base text-gray-600">
-                        Already have an account? <Link to="/login" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</Link>
+                        Already have an account? <Link to="/login" title="" className="font-medium text-cyan-600 transition-all duration-200 hover:underline">Login</Link>
                     </p>
                     {isSignup ? <form className="mt-4" onSubmit={handleSignup}>
                         <div className="space-y-3">
@@ -146,7 +146,7 @@ const Profile = () => {
                             <div className="space-y-3">
                                 <button
                                     type="submit"
-                                    className="inline-flex items-center justify-center w-full px-4 py-3 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                                    className="inline-flex items-center justify-center w-full px-4 py-3 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-cyan-800 focus:outline-none hover:opacity-80 focus:opacity-80"
                                 >
                                     Sign up
                                 </button>
