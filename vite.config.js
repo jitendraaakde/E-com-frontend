@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://e-comm-backend-ugos.onrender.com',
+        target: 'https://e-comm-backend-ugos.onrender.com',  // Backend URL
         changeOrigin: true,
         secure: false,
       },
