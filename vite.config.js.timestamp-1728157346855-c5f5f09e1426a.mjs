@@ -6,7 +6,7 @@ var vite_config_default = defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: "https://e-comm-backend-ugos.onrender.com/",
         changeOrigin: true,
         secure: false
       }
