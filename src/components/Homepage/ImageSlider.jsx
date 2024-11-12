@@ -12,7 +12,7 @@ const ImageSlider = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/product/products?category=Shirts');
+        const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/product/products?category=Shirts');
         const data = await response.json();
         const formattedImages = data.products.map((product) => ({
           categoryName: 'Shirts',

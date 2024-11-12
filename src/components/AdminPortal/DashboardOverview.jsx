@@ -14,7 +14,7 @@ function DashboardOverview() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch('/api/admin/get-admin-dashboard-data');
+      const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/admin/get-admin-dashboard-data');
       const data = await response.json();
 
       setStats([

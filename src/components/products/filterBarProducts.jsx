@@ -96,7 +96,7 @@ export default function Filters() {
 
   const getInitialFiltersData = async () => {
     try {
-      const response = await fetch(`/api/product/category-brand-size`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/category-brand-size`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

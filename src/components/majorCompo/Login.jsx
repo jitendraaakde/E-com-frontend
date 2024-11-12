@@ -59,7 +59,7 @@ function LoginForm({ setRenderCompo }) {
         const formEntries = Object.fromEntries(formData.entries());
 
         try {
-            const response = await fetch('/api/users/login', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function EmailForm({ setRenderCompo, setUserEmail }) {
         const formData = new FormData(e.target);
         const formEntries = Object.fromEntries(formData.entries());
         try {
-            const response = await fetch('/api/users/forget-password', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/forget-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ function OtpForm({ setRenderCompo, userEmail }) {
         const formEntries = Object.fromEntries(formData.entries());
         formEntries.email = userEmail;
         try {
-            const response = await fetch('/api/users/forget-password-otp', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/forget-password-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -261,7 +261,7 @@ function NewPasswordForm({ setRenderCompo, userEmail }) {
         const formEntries = Object.fromEntries(formData.entries());
         formEntries.email = userEmail;
         try {
-            const response = await fetch('/api/users/new-password', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/new-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

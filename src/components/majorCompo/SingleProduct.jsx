@@ -20,7 +20,7 @@ export default function SingleProduct() {
     const handleSingleProduct = async (id) => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/product/${id}`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default function SingleProduct() {
 
     const addToCart = async (productId, size) => {
         try {
-            const response = await fetch(`/api/product/add-cart`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/add-cart`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -88,7 +88,7 @@ function ProfileContent() {
 
     const handleSubmitBackend = async (formEntries) => {
         try {
-            const response = await fetch('/api/users/edit-user', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/edit-user', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ function ChangePasswordContent() {
 
     const changePassword = async (formEntries) => {
         try {
-            const response = await fetch(`/api/users/change-password`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -354,7 +354,7 @@ function DeleteAccountContent() {
 
     const handleDeleteUser = async () => {
         try {
-            const response = await fetch(`/api/users/delete-user`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/delete-user`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -420,7 +420,7 @@ function LogoutUser() {
     const navigate = useNavigate()
     const handleUserLogout = async () => {
         try {
-            const response = await fetch(`/api/users/logout`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/logout`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

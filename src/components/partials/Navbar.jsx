@@ -15,7 +15,7 @@ export default function Navbar() {
     const dispatch = useDispatch()
     const getCartItems = async () => {
         try {
-            const response = await fetch(`/api/product/get-cart-items`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/get-cart-items`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

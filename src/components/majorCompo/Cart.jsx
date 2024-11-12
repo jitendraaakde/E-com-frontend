@@ -13,7 +13,7 @@ const CartComponent = () => {
     let items = cart.items
     const removeItem = async (id) => {
         try {
-            const response = await fetch(`/api/product/remove-cart-item/${id}`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/remove-cart-item/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const CartComponent = () => {
 
     const updateCartItem = async (id, property, value) => {
         try {
-            const response = await fetch(`/api/product/update-cart-item/${id}`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/update-cart-item/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

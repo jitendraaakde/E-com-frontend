@@ -14,7 +14,7 @@ export default function CategoryCards() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/product/categories', {
+      const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/product/categories', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -47,7 +47,7 @@ export default function CategoryCards() {
     try {
       const categoriesWithProducts = await Promise.all(
         categories.map(async (category) => {
-          const productResponse = await fetch(`/api/product/categoryProduct/${category._id}`, {
+          const productResponse = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/categoryProduct/${category._id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

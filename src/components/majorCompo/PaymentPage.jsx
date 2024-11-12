@@ -29,7 +29,7 @@ export default function PaymentPage() {
 
   const placeOrder = async (productArray, shippingAddress) => {
     try {
-      const response = await fetch(`/api/users/add-order`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/add-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productArray, shippingAddress }),

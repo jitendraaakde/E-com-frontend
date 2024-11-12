@@ -10,7 +10,7 @@ export default function FeaturedProducts({ category = 'jeans' }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`/api/product/products?category=Jeans`);
+        const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/product/products?category=Jeans`);
         const data = await response.json();
         console.log(data)
         const formattedProducts = data.products.map((product) => ({

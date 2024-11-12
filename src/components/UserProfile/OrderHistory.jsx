@@ -6,7 +6,7 @@ export default function OrderHistory() {
 
     const fetchOrderHistory = async () => {
         try {
-            const response = await fetch(`/api/users/order-history`, {
+            const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/order-history`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

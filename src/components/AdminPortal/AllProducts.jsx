@@ -15,7 +15,7 @@ export default function AllProducts() {
 
   const fetchProducts = async (page) => {
     try {
-      const response = await fetch(`/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export default function AllProducts() {
 
   const deleteProduct = async (id) => {
     try {
-      const response = await fetch(`/api/admin/delete-product/${id}`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/admin/delete-product/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

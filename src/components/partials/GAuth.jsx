@@ -13,7 +13,7 @@ const GAuth = () => {
 
             const result = await signInWithPopup(auth, provider)
 
-            const response = await fetch('/api/users/google', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/google', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

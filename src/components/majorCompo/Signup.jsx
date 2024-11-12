@@ -18,7 +18,7 @@ const Profile = () => {
         const formEntries = Object.fromEntries(formData.entries());
 
         try {
-            const response = await fetch('/api/users/signup', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const Profile = () => {
         formEntries.email = userEmail;
 
         try {
-            const response = await fetch('/api/users/otp', {
+            const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/users/otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

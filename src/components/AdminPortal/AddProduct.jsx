@@ -19,7 +19,7 @@ export default function AddProduct() {
 
   const handleAddProduct = async (formEntries) => {
     try {
-      const response = await fetch('/api/admin/add-product', {
+      const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/admin/add-product', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export default function AddProduct() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/admin/get-category', {
+      const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/admin/get-category', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export default function AddProduct() {
   const addNewCategory = async (categoryName) => {
     newCategory.current.value = '';
     try {
-      const response = await fetch('/api/admin/add-category', {
+      const response = await fetch('https://e-comm-backend-ugos.onrender.com/api/admin/add-category', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

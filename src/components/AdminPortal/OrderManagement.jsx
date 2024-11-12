@@ -8,7 +8,7 @@ export default function OrderManagement() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`/api/admin/edit-order-status`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/admin/edit-order-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export default function OrderManagement() {
 
   const getOrders = async () => {
     try {
-      const response = await fetch(`/api/admin/get-orders`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/admin/get-orders`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

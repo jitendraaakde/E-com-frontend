@@ -17,7 +17,7 @@ export default function Checkout() {
 
   const initialAddressesFetch = async () => {
     try {
-      const response = await fetch(`/api/users/get-addresses`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/get-addresses`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -49,7 +49,7 @@ export default function Checkout() {
 
   const handleAddAddress = async (newAddress) => {
     try {
-      const response = await fetch(`/api/users/add-addresses`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/add-addresses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newAddress),
@@ -73,7 +73,7 @@ export default function Checkout() {
 
   const handleDeleteAddress = async (id) => {
     try {
-      const response = await fetch(`/api/users/delete-address/${id}`, {
+      const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/users/delete-address/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });

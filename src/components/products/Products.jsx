@@ -18,7 +18,7 @@ export default function Products() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
+        const response = await fetch(`https://e-comm-backend-ugos.onrender.com/api/admin/all-product?page=${page}&limit=${itemsPerPage}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
